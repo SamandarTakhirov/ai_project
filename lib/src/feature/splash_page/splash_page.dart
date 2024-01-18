@@ -1,6 +1,7 @@
 import 'package:ai_project/src/common/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'review_page.dart';
 
@@ -12,18 +13,29 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+  final ValueNotifier<String> appVersion = ValueNotifier("");
   @override
   void initState() {
     super.initState();
-    openReviewPage();
+    getVersion().then((value) => openReviewPage());
   }
 
-  void openReviewPage() async {
-    await Future.delayed(const Duration(seconds: 3));
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const ReviewPage()),
+  void openReviewPage() {
+    Future.delayed(
+      const Duration(seconds: 3),
+      () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const ReviewPage(),
+          ),
+        );
+      },
     );
+  }
+
+  Future<void> getVersion() async {
+    appVersion.value = (await PackageInfo.fromPlatform()).version;
   }
 
   @override
@@ -47,13 +59,18 @@ class _SplashPageState extends State<SplashPage> {
                   fontSize: 28,
                 ),
               ),
-              Text(
-                "Version 1.0",
-                style: TextStyle(
-                  color: AppColors.white,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 12,
-                ),
+              ValueListenableBuilder(
+                valueListenable: appVersion,
+                builder: (context, version, child) {
+                  return Text(
+                    "Version $version",
+                    style: TextStyle(
+                      color: AppColors.white,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 12,
+                    ),
+                  );
+                }
               ),
             ],
           )
