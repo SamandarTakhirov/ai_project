@@ -9,7 +9,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  MaterialApp(
-      title: "AI Test",
+      title: "FloraAI",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
