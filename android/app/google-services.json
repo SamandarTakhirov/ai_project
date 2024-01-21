@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "363975990498",
+    "firebase_url": "https://ai-project-2d1fe-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "ai-project-2d1fe",
+    "storage_bucket": "ai-project-2d1fe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:363975990498:android:a5e7fbfd1d32d0374212bb",
+        "android_client_info": {
+          "package_name": "com.example.ai_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "363975990498-4hcmet9lpkei3edbe0u8210skb31m5qh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8JeQyqpm5g_PaJjLvbJE6Rd2tks4JcDA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "363975990498-4hcmet9lpkei3edbe0u8210skb31m5qh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
