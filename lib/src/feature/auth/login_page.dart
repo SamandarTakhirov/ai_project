@@ -1,5 +1,7 @@
 import 'package:ai_project/src/common/constants/app_images.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../common/constants/app_colors.dart';
@@ -24,6 +26,25 @@ class _LogInPageState extends State<LogInPage>
       duration: const Duration(seconds: 8),
     )..repeat();
     animation = Tween(begin: 0.0, end: 1.0).animate(controller);
+  }
+
+  Future<UserCredential> singInWithGoogle() async {
+    final googleUser = await GoogleSignIn().signIn();
+    print(googleUser);
+    final googleAuth = await googleUser?.authentication;
+    print(googleAuth);
+
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+    print(credential);
+
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
+
+  Future<void> userSingOut() async {
+    await GoogleSignIn().signOut();
   }
 
   @override
@@ -60,11 +81,17 @@ class _LogInPageState extends State<LogInPage>
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       _button(
+                        onTap: () async {
+                          // await userSingOut();
+                          final a = await singInWithGoogle();
+                          print(a);
+                        },
                         size: size,
                         image: AppImages.google,
                         text: "Login with Google",
                       ),
                       _button(
+                        onTap: () {},
                         size: size,
                         image: AppImages.apple,
                         text: "Login with Apple ID",
@@ -81,14 +108,18 @@ class _LogInPageState extends State<LogInPage>
   }
 }
 
-Widget _button(
-    {required Size size, required String text, required String image}) {
+Widget _button({
+  required Size size,
+  required String text,
+  required String image,
+  required void Function() onTap,
+}) {
   return FilledButton(
     style: FilledButton.styleFrom(
       backgroundColor: AppColors.buttonBKG,
       fixedSize: Size(size.width * 0.85, size.height * 0.065),
     ),
-    onPressed: () {},
+    onPressed: onTap,
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       mainAxisSize: MainAxisSize.min,
