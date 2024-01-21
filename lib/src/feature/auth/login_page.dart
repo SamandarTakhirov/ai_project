@@ -4,8 +4,27 @@ import 'package:lottie/lottie.dart';
 
 import '../../common/constants/app_colors.dart';
 
-class LogInPage extends StatelessWidget {
+class LogInPage extends StatefulWidget {
   const LogInPage({super.key});
+
+  @override
+  State<LogInPage> createState() => _LogInPageState();
+}
+
+class _LogInPageState extends State<LogInPage>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController controller;
+  late final Animation<double> animation;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 8),
+    )..repeat();
+    animation = Tween(begin: 0.0, end: 1.0).animate(controller);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +35,9 @@ class LogInPage extends StatelessWidget {
           Center(
             child: Lottie.asset(
               "assets/lottie/ai_logo.json",
+              controller: controller,
+              filterQuality: FilterQuality.high,
+              frameRate: FrameRate.max,
             ),
           ),
           SizedBox(
