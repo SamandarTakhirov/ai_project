@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../common/constants/app_colors.dart';
 import '../../common/constants/app_images.dart';
+import '../auth/login_page.dart';
 import 'widgets/carousel_widgets.dart';
 
 class ReviewPage extends StatefulWidget {
@@ -15,11 +16,18 @@ class ReviewPage extends StatefulWidget {
 class _ReviewPageState extends State<ReviewPage> {
   int activeIndex = 0;
 
-  List<String> images = [
-    AppImages.splashOne,
-    AppImages.splashTwo,
-    AppImages.splashThree,
-  ];
+  Map<String, String> images = {
+    AppImages.splashOne: "Unlock the Power Of Future AI",
+    AppImages.splashTwo: "Chat With Your Favourite Ai",
+    AppImages.splashThree: "Boost Your Mind Power with Ai",
+  };
+
+  void openLoginPage() => Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const LogInPage(),
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +36,10 @@ class _ReviewPageState extends State<ReviewPage> {
       appBar: AppBar(
         actions: [
           TextButton(
-            onPressed: () {},
+            onPressed: openLoginPage,
+            style: FilledButton.styleFrom(
+              surfaceTintColor: Colors.transparent,
+            ),
             child: Text(
               "Skip",
               style: TextStyle(
@@ -44,63 +55,77 @@ class _ReviewPageState extends State<ReviewPage> {
       body: SafeArea(
         child: Column(
           children: [
-            CarouselSlider.builder(
-              itemCount: images.length,
-              itemBuilder: (context, index, realIndex) {
-                return Image.asset(
-                  images[index],
-                  fit: BoxFit.fill,
-                );
-              },
-              options: CarouselOptions(
-                clipBehavior: Clip.antiAliasWithSaveLayer,
-                viewportFraction: 1,
-                height: size.height * 0.5,
-                autoPlay: false,
-                autoPlayInterval: const Duration(seconds: 5),
-                autoPlayCurve: Curves.fastOutSlowIn,
-                pauseAutoPlayOnManualNavigate: true,
-                onPageChanged: (index, reason) => setState(
-                  () => activeIndex = index,
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: size.height * 0.03),
-              child: Center(
-                child: BuildIndicator(
-                  count: 3,
-                  activeIndex: activeIndex,
-                  colors: Colors.black,
-                  // count: 5,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30.0),
-              child: Column(
-                children: [
-                  const Text(
-                    "Unlock the Power Of  Future AI",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 35,
+            Stack(
+              children: [
+                CarouselSlider.builder(
+                  itemCount: images.length,
+                  itemBuilder: (context, index, realIndex) {
+                    return Column(
+                      children: [
+                        SizedBox(
+                          width: size.width * 0.8,
+                          child: Image.asset(
+                            images.keys.elementAt(index),
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                        SizedBox(
+                          height: size.height * 0.06,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                          child: Column(
+                            children: [
+                              Text(
+                                images.values.elementAt(index),
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 35,
+                                ),
+                              ),
+                              Text(
+                                "Chat with the smartest AI Future Experience power of AI with us",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w300,
+                                  color: AppColors.textGrey,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                  options: CarouselOptions(
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    viewportFraction: 1,
+                    height: size.height * 0.8,
+                    autoPlay: false,
+                    autoPlayInterval: const Duration(seconds: 5),
+                    autoPlayCurve: Curves.fastOutSlowIn,
+                    pauseAutoPlayOnManualNavigate: true,
+                    onPageChanged: (index, reason) => setState(
+                      () => activeIndex = index,
                     ),
                   ),
-                  Text(
-                    "Chat with the smartest AI Future Experience power of AI with us",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w300,
-                      color: AppColors.textGrey,
-                      fontSize: 16,
+                ),
+                Positioned(
+                  width: size.width,
+                  height: size.height * 1.05,
+                  child: Center(
+                    child: BuildIndicator(
+                      count: 3,
+                      activeIndex: activeIndex,
+                      colors: Colors.black,
+                      // count: 5,
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            const SizedBox(height: 20),
             SizedBox(
               width: size.width * 0.4,
               height: size.height * 0.08,
