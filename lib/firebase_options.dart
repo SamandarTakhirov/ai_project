@@ -65,6 +65,7 @@ class DefaultFirebaseOptions {
     projectId: 'ai-project-2d1fe',
     databaseURL: 'https://ai-project-2d1fe-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'ai-project-2d1fe.appspot.com',
+    androidClientId: '363975990498-asugp2u65o50nud0quq0mk97ojon2sra.apps.googleusercontent.com',
     iosClientId: '363975990498-2j1ca1rushgn43mdi58kr8r2f20hkko7.apps.googleusercontent.com',
     iosBundleId: 'com.example.aiProject',
   );
