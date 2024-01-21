@@ -40,7 +40,7 @@ class _SplashPageState extends State<SplashPage> {
           Column(
             children: [
               Text(
-                "GoogleAI",
+                "FloraAI",
                 style: TextStyle(
                   color: AppColors.white,
                   fontWeight: FontWeight.w700,

@@ -24,7 +24,7 @@ class LogInPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Welcome to\nGoogleAI",
+                  "Welcome to\nFloraAI",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: AppColors.black,
