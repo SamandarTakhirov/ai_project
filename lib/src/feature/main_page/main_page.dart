@@ -1,3 +1,4 @@
+import 'package:ai_project/src/common/models/menus_model.dart';
 import 'package:ai_project/src/common/utils/context_utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -5,13 +6,14 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../common/constants/app_colors.dart';
 import '../../common/constants/app_icons.dart';
-import '../home/widgets/home.dart';
 
 class MainPage extends StatelessWidget {
-  final UserCredential userCredential;
+  final ValueNotifier<int> valueNotifier;
+  final ValueNotifier<double> radius;
 
   const MainPage({
-    required this.userCredential,
+    required this.valueNotifier,
+    required this.radius,
     super.key,
   });
 
@@ -24,6 +26,7 @@ class MainPage extends StatelessWidget {
       AppIcons.appstore,
       AppIcons.googlePlay,
     ];
+    final user = FirebaseAuth.instance.currentUser;
     return Scaffold(
       body: ColoredBox(
         color: AppColors.black,
@@ -39,13 +42,13 @@ class MainPage extends StatelessWidget {
                         Radius.circular(100),
                       ),
                       child: Image(
-                        image: NetworkImage("${userCredential.user!.photoURL}"),
+                        image: NetworkImage("${user!.photoURL}"),
                       ),
                     ),
                     title: Text(
-                      "${userCredential.user!.displayName}".replaceRange(
-                        "${userCredential.user!.displayName}".indexOf(" "),
-                        "${userCredential.user!.displayName}".length,
+                      "${user.displayName}".replaceRange(
+                        "${user.displayName}".indexOf(" "),
+                        "${user.displayName}".length,
                         "",
                       ),
                       maxLines: 1,
@@ -56,47 +59,39 @@ class MainPage extends StatelessWidget {
                     ),
                     subtitle: Text(
                       maxLines: 1,
-                      "${userCredential.user!.email}",
+                      "${user.email}",
                       style: context.textTheme.labelSmall?.copyWith(
                         color: AppColors.white,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
-                  _customListTile(
-                    onTap: () {},
-                    context: context,
-                    title: "Chat",
-                    icon: AppIcons.chat,
-                  ),
-                  _customListTile(
-                    context: context,
-                    title: "New chat",
-                    icon: AppIcons.newWindow,
-                  ),
-                  _customListTile(
-                    context: context,
-                    title: "History",
-                    icon: AppIcons.history,
-                  ),
-                  _customListTile(
-                    context: context,
-                    title: "Developers",
-                    icon: AppIcons.developer,
-                  ),
-                  _customListTile(
-                    context: context,
-                    title: "About",
-                    icon: AppIcons.info,
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      const item = MenusModels.menus;
+                      return _CustomListTile(
+                        menusModels: item[index],
+                        onTap: () {
+                          valueNotifier.value = index;
+                          radius.value = 0;
+                        },
+                      );
+                    },
+                    itemCount: MenusModels.menus.length,
                   ),
                 ],
               ),
               Column(
                 children: [
-                  _customListTile(
-                    context: context,
-                    title: "Log out",
-                    icon: AppIcons.logout,
+                  _CustomListTile(
+                    onTap: () {
+                      radius.value = 0;
+                    },
+                    menusModels: const MenusModels(
+                      icon: AppIcons.logout,
+                      text: "Log out",
+                    ),
                   ),
                   SizedBox(
                     height: size.height * 0.05,
@@ -147,25 +142,33 @@ Widget _customDecoratedBox({
       ),
     );
 
-Widget _customListTile({
-  required BuildContext context,
-  required String title,
-  required String icon,
-  void Function()? onTap,
-}) =>
-    ListTile(
+class _CustomListTile extends StatelessWidget {
+  final MenusModels menusModels;
+  final void Function() onTap;
+
+  const _CustomListTile({
+    required this.menusModels,
+    required this.onTap,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
       onTap: onTap,
       leading: SvgPicture.asset(
-        icon,
+        menusModels.icon,
         color: AppColors.white,
         width: 20,
         height: 20,
       ),
       title: Text(
-        title,
+        menusModels.text,
         style: context.textTheme.titleMedium?.copyWith(
           color: AppColors.white,
           fontWeight: FontWeight.w700,
         ),
       ),
     );
+  }
+}

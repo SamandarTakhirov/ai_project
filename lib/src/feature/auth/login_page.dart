@@ -46,6 +46,12 @@ class _LogInPageState extends State<LogInPage>
   }
 
   @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     return Scaffold(
@@ -86,9 +92,7 @@ class _LogInPageState extends State<LogInPage>
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => HomePage(
-                                  userCredential: userCredential,
-                                ),
+                                builder: (context) => HomePage(),
                               ),
                             );
                           }
