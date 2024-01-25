@@ -21,7 +21,16 @@ class Home extends StatelessWidget {
         Radius.circular(radius),
       ),
       child: Scaffold(
+        backgroundColor: AppColors.white,
         appBar: AppBar(
+          surfaceTintColor: Colors.transparent,
+          backgroundColor: AppColors.white,
+          leading: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Image.asset(
+              AppIcons.flora,
+            ),
+          ),
           title: Text(
             "FloraAI",
             style: context.textTheme.titleLarge?.copyWith(
@@ -56,8 +65,9 @@ class Home extends StatelessWidget {
                     height: size.height * 0.03,
                   ),
                   Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: size.width * 0.05),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: size.width * 0.05,
+                    ),
                     child: TextField(
                       maxLines: 1,
                       cursorColor: AppColors.black,

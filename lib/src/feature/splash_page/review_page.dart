@@ -1,3 +1,4 @@
+import 'package:ai_project/src/common/utils/context_utils.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
@@ -63,14 +64,14 @@ class _ReviewPageState extends State<ReviewPage> {
                     return Column(
                       children: [
                         SizedBox(
-                          width: size.width * 0.8,
+                          width: size.width * 0.75,
                           child: Image.asset(
                             images.keys.elementAt(index),
                             fit: BoxFit.fill,
                           ),
                         ),
                         SizedBox(
-                          height: size.height * 0.06,
+                          height: size.height * 0.08,
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 30.0),
@@ -79,18 +80,17 @@ class _ReviewPageState extends State<ReviewPage> {
                               Text(
                                 images.values.elementAt(index),
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(
+                                style:
+                                    context.textTheme.headlineLarge?.copyWith(
                                   fontWeight: FontWeight.w700,
-                                  fontSize: 35,
                                 ),
                               ),
                               Text(
                                 "Chat with the smartest AI Future Experience power of AI with us",
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w300,
+                                style: context.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w500,
                                   color: AppColors.textGrey,
-                                  fontSize: 16,
                                 ),
                               ),
                             ],
@@ -114,7 +114,7 @@ class _ReviewPageState extends State<ReviewPage> {
                 ),
                 Positioned(
                   width: size.width,
-                  height: size.height * 1.05,
+                  height: size.height * 1.02,
                   child: Center(
                     child: BuildIndicator(
                       count: 3,
@@ -148,7 +148,11 @@ class _ReviewPageState extends State<ReviewPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() {
+                          activeIndex = activeIndex - 1;
+                        });
+                      },
                       icon: const Icon(
                         Icons.arrow_back_outlined,
                         color: Colors.grey,
@@ -162,7 +166,11 @@ class _ReviewPageState extends State<ReviewPage> {
                       ),
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() {
+                          activeIndex = activeIndex + 1;
+                        });
+                      },
                       icon: const Icon(Icons.arrow_forward_rounded),
                     ),
                   ],

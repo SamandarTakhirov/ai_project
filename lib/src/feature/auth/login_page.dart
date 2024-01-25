@@ -49,6 +49,7 @@ class _LogInPageState extends State<LogInPage>
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     return Scaffold(
+      backgroundColor: AppColors.white,
       body: ListView(
         children: [
           Center(

@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../common/constants/app_colors.dart';
 import '../../common/constants/app_icons.dart';
+import '../home/widgets/home.dart';
 
 class MainPage extends StatelessWidget {
   final UserCredential userCredential;
@@ -38,8 +39,7 @@ class MainPage extends StatelessWidget {
                         Radius.circular(100),
                       ),
                       child: Image(
-                        image:
-                            NetworkImage("${userCredential.user!.photoURL}"),
+                        image: NetworkImage("${userCredential.user!.photoURL}"),
                       ),
                     ),
                     title: Text(
@@ -64,13 +64,14 @@ class MainPage extends StatelessWidget {
                     ),
                   ),
                   _customListTile(
+                    onTap: () {},
                     context: context,
                     title: "Chat",
                     icon: AppIcons.chat,
                   ),
                   _customListTile(
                     context: context,
-                    title: "New chart",
+                    title: "New chat",
                     icon: AppIcons.newWindow,
                   ),
                   _customListTile(
@@ -124,7 +125,10 @@ class MainPage extends StatelessWidget {
   }
 }
 
-Widget _customDecoratedBox({required String icon}) => DecoratedBox(
+Widget _customDecoratedBox({
+  required String icon,
+}) =>
+    DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(
           Radius.circular(100),

@@ -53,11 +53,6 @@ class _HomePageState extends State<HomePage> {
             },
           ),
           GestureDetector(
-            // onTap: () {
-            //   setState(() {
-            //     value == 0 ? value = 1 : value = 0;
-            //   });
-            // },
             onHorizontalDragUpdate: (e) {
               if (e.delta.dx > 0) {
                 setState(() {
