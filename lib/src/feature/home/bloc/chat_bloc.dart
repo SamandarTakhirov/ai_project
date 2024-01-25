@@ -28,34 +28,34 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     ));
 
     try {
-      print("asdasdasdasdasd");
       emit(state.copyWith(
-        contents: state.contents
+        contents: state.contents.toList()
           ..add(Content(
             role: "user",
             parts: [Parts(text: value.text)],
           )),
       ));
       await streamSubscription?.cancel();
-      streamSubscription = _gemini
-          .streamChat(
-        state.contents,
-      )
-          .listen(
-        (event) {
-          if (state.contents.isNotEmpty &&
-              state.contents.last.role == event.content?.role) {
-            state.contents.last.parts!.last.text =
-                "${state.contents.last.parts!.last.text}${event.output}";
-          } else {
-            state.contents.add(Content(
-              role: "model",
-              parts: [Parts(text: event.output)],
-            ));
-          }
-          emit(state);
-        },
-      );
+      await for (final event in _gemini.streamChat(state.contents)) {
+        List<Content> contents = [];
+        if (state.contents.isNotEmpty &&
+            state.contents.last.role == event.content?.role) {
+          contents = state.contents.toList();
+          contents.last.parts!.last.text =
+              "${state.contents.last.parts!.last.text}${event.output}";
+        } else {
+          contents = state.contents.toList()
+            ..add(
+              Content(
+                role: "model",
+                parts: [Parts(text: event.output)],
+              ),
+            );
+        }
+        emit(
+          state.copyWith(contents: contents),
+        );
+      }
     } catch (_) {
       emit(state.copyWith(
         error: "$_",
