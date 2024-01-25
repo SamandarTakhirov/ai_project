@@ -56,7 +56,7 @@ class _SplashPageState extends State<SplashPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.black,
+      backgroundColor: AppColors.white,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -74,7 +74,7 @@ class _SplashPageState extends State<SplashPage>
               Text(
                 "FloraAI",
                 style: TextStyle(
-                  color: AppColors.white,
+                  color: AppColors.black,
                   fontWeight: FontWeight.w700,
                   fontSize: 28,
                 ),
@@ -85,7 +85,7 @@ class _SplashPageState extends State<SplashPage>
                   return Text(
                     "Version $ver",
                     style: TextStyle(
-                      color: AppColors.white,
+                      color: AppColors.black,
                       fontWeight: FontWeight.w400,
                       fontSize: 12,
                     ),

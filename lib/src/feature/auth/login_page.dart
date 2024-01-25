@@ -5,6 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../common/constants/app_colors.dart';
+import '../home/home_page.dart';
 
 class LogInPage extends StatefulWidget {
   const LogInPage({super.key});
@@ -30,15 +31,12 @@ class _LogInPageState extends State<LogInPage>
 
   Future<UserCredential> singInWithGoogle() async {
     final googleUser = await GoogleSignIn().signIn();
-    print(googleUser);
     final googleAuth = await googleUser?.authentication;
-    print(googleAuth);
 
     final credential = GoogleAuthProvider.credential(
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
-    print(credential);
 
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
@@ -82,9 +80,17 @@ class _LogInPageState extends State<LogInPage>
                     children: [
                       _button(
                         onTap: () async {
-                          // await userSingOut();
-                          final a = await singInWithGoogle();
-                          print(a);
+                          final userCredential = await singInWithGoogle();
+                          if (userCredential.user!.emailVerified) {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => HomePage(
+                                  userCredential: userCredential,
+                                ),
+                              ),
+                            );
+                          }
                         },
                         size: size,
                         image: AppImages.google,

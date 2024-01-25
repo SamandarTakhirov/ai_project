@@ -4,4 +4,6 @@ abstract class AppImages {
   static String splashThree = "assets/images/splash_three.png";
   static String apple = "assets/images/apple_logo.png";
   static String google = "assets/images/google_logo.png";
+  static String send = "assets/svg/send.png";
+  static String rest = "assets/svg/rest.svg";
 }
