@@ -15,13 +15,20 @@ class ReviewPage extends StatefulWidget {
 }
 
 class _ReviewPageState extends State<ReviewPage> {
-  int activeIndex = 0;
+  late final CarouselController _controller;
+  final ValueNotifier<int> activeIndex = ValueNotifier(0);
 
   Map<String, String> images = {
     AppImages.splashOne: "Unlock the Power Of Future AI",
     AppImages.splashTwo: "Chat With Your Favourite Ai",
     AppImages.splashThree: "Boost Your Mind Power with Ai",
   };
+
+  @override
+  void initState() {
+    _controller = CarouselController();
+    super.initState();
+  }
 
   void openLoginPage() => Navigator.pushReplacement(
         context,
@@ -59,6 +66,7 @@ class _ReviewPageState extends State<ReviewPage> {
             Stack(
               children: [
                 CarouselSlider.builder(
+                  carouselController: _controller,
                   itemCount: images.length,
                   itemBuilder: (context, index, realIndex) {
                     return Column(
@@ -107,20 +115,23 @@ class _ReviewPageState extends State<ReviewPage> {
                     autoPlayInterval: const Duration(seconds: 5),
                     autoPlayCurve: Curves.fastOutSlowIn,
                     pauseAutoPlayOnManualNavigate: true,
-                    onPageChanged: (index, reason) => setState(
-                      () => activeIndex = index,
-                    ),
+                    onPageChanged: (index, reason) => activeIndex.value = index,
                   ),
                 ),
                 Positioned(
                   width: size.width,
                   height: size.height * 1.02,
                   child: Center(
-                    child: BuildIndicator(
-                      count: 3,
-                      activeIndex: activeIndex,
-                      colors: Colors.black,
-                      // count: 5,
+                    child: ValueListenableBuilder(
+                      valueListenable: activeIndex,
+                      builder: (context, index, _) {
+                        return BuildIndicator(
+                          count: 3,
+                          activeIndex: index,
+                          colors: Colors.black,
+                          // count: 5,
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -148,14 +159,10 @@ class _ReviewPageState extends State<ReviewPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     IconButton(
-                      onPressed: () {
-                        setState(() {
-                          activeIndex = activeIndex - 1;
-                        });
-                      },
-                      icon: const Icon(
+                      onPressed: () => _controller.previousPage(),
+                      icon: Icon(
                         Icons.arrow_back_outlined,
-                        color: Colors.grey,
+                        color: AppColors.black,
                       ),
                     ),
                     SizedBox(
@@ -166,12 +173,11 @@ class _ReviewPageState extends State<ReviewPage> {
                       ),
                     ),
                     IconButton(
-                      onPressed: () {
-                        setState(() {
-                          activeIndex = activeIndex + 1;
-                        });
-                      },
-                      icon: const Icon(Icons.arrow_forward_rounded),
+                      onPressed: () => _controller.nextPage(),
+                      icon: Icon(
+                        Icons.arrow_forward_rounded,
+                        color: AppColors.black,
+                      ),
                     ),
                   ],
                 ),
