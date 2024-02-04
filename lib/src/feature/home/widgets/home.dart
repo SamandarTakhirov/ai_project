@@ -25,7 +25,6 @@ class _HomeState extends State<Home> {
   late final ChatBloc chatBloc;
   late final List<Content> contents;
 
-
   @override
   void initState() {
     chatBloc = ChatBloc();
@@ -79,10 +78,18 @@ class _HomeState extends State<Home> {
           body: BlocListener<ChatBloc, ChatState>(
             listener: (context, state) async {
               print(state.contents);
-
             },
             child: Stack(
               children: [
+                Positioned.fill(
+                  child: BlocBuilder<ChatBloc, ChatState>(
+                    builder: (context, state) {
+                      return Text("${state.contents.map(
+                        (e) => e.parts?.map((e) => "${e.text}\n"),
+                      )}");
+                    },
+                  ),
+                ),
                 Positioned(
                   bottom: 10,
                   left: 1,

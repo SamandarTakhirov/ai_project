@@ -43,6 +43,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           contents = state.contents.toList();
           contents.last.parts!.last.text =
               "${state.contents.last.parts!.last.text}${event.output}";
+          emit(
+            state.copyWith(contents: contents),
+          );
         } else {
           contents = state.contents.toList()
             ..add(
@@ -51,10 +54,11 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
                 parts: [Parts(text: event.output)],
               ),
             );
+          emit(
+            state.copyWith(contents: contents),
+          );
         }
-        emit(
-          state.copyWith(contents: contents),
-        );
+
       }
     } catch (_) {
       emit(state.copyWith(
