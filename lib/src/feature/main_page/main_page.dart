@@ -26,6 +26,7 @@ class MainPage extends StatelessWidget {
       AppIcons.appstore,
       AppIcons.googlePlay,
     ];
+
     final user = FirebaseAuth.instance.currentUser;
     return Scaffold(
       body: ColoredBox(
@@ -46,10 +47,11 @@ class MainPage extends StatelessWidget {
                       ),
                     ),
                     title: Text(
+                      overflow: TextOverflow.ellipsis,
                       "${user.displayName}".replaceRange(
                         "${user.displayName}".indexOf(" "),
                         "${user.displayName}".length,
-                        "",
+                        " ",
                       ),
                       maxLines: 1,
                       style: context.textTheme.titleLarge?.copyWith(
@@ -60,31 +62,38 @@ class MainPage extends StatelessWidget {
                     subtitle: Text(
                       maxLines: 1,
                       "${user.email}",
+                      overflow: TextOverflow.ellipsis,
                       style: context.textTheme.labelSmall?.copyWith(
                         color: AppColors.white,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      const item = MenusModels.menus;
-                      return _CustomListTile(
-                        menusModels: item[index],
-                        onTap: () {
-                          valueNotifier.value = index;
-                          radius.value = 0;
-                        },
-                      );
-                    },
-                    itemCount: MenusModels.menus.length,
-                  ),
+                  ValueListenableBuilder(
+                      valueListenable: valueNotifier,
+                      builder: (context, value, child) {
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            const item = MenusModels.menus;
+                            return _CustomListTile(
+                              isActive: value == index,
+                              menusModels: item[index],
+                              onTap: () {
+                                valueNotifier.value = index;
+                                radius.value = 0;
+                              },
+                            );
+                          },
+                          itemCount: MenusModels.menus.length,
+                        );
+                      }),
                 ],
               ),
               Column(
                 children: [
                   _CustomListTile(
+                    isActive: false,
                     onTap: () {
                       radius.value = 0;
                     },
@@ -143,10 +152,12 @@ Widget _customDecoratedBox({
     );
 
 class _CustomListTile extends StatelessWidget {
+  final bool isActive;
   final MenusModels menusModels;
   final void Function() onTap;
 
   const _CustomListTile({
+    required this.isActive,
     required this.menusModels,
     required this.onTap,
     super.key,
@@ -154,21 +165,41 @@ class _CustomListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: onTap,
-      leading: SvgPicture.asset(
-        menusModels.icon,
-        color: AppColors.white,
-        width: 20,
-        height: 20,
-      ),
-      title: Text(
-        menusModels.text,
-        style: context.textTheme.titleMedium?.copyWith(
-          color: AppColors.white,
-          fontWeight: FontWeight.w700,
+    final size = MediaQuery.sizeOf(context);
+    return Stack(
+      children: [
+        AnimatedPositioned(
+          duration: const Duration(milliseconds: 100),
+          height: 56,
+          right: 0,
+          width: isActive ? size.width * 0.98 : 0,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: isActive ? AppColors.white : AppColors.black,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(15),
+                bottomLeft: Radius.circular(15),
+              ),
+            ),
+          ),
         ),
-      ),
+        ListTile(
+          onTap: onTap,
+          leading: SvgPicture.asset(
+            menusModels.icon,
+            color: isActive ? Colors.black : AppColors.white,
+            width: 20,
+            height: 20,
+          ),
+          title: Text(
+            menusModels.text,
+            style: context.textTheme.titleMedium?.copyWith(
+              color: isActive ? Colors.black : AppColors.white,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

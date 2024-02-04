@@ -11,7 +11,6 @@ import '../history/history_page.dart';
 import '../main_page/main_page.dart';
 
 class HomePage extends StatefulWidget {
-
   const HomePage({
     super.key,
   });
@@ -62,8 +61,12 @@ class _HomePageState extends State<HomePage> {
                             Home(
                               radius: item == 1 ? 20 : 0,
                             ),
-                            const HistoryPage(),
-                            const Developers(),
+                            HistoryPage(
+                              radius: item == 1 ? 20 : 0,
+                            ),
+                             Developers(
+                               radius: item == 1 ? 20 : 0,
+                             ),
                             const About(),
                           ],
                         ),

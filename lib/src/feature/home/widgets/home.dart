@@ -23,7 +23,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   late final TextEditingController textEditingController;
   late final ChatBloc chatBloc;
-  final List<Content> contents = [];
+  late final List<Content> contents;
+
 
   @override
   void initState() {
@@ -76,8 +77,9 @@ class _HomeState extends State<Home> {
             ],
           ),
           body: BlocListener<ChatBloc, ChatState>(
-            listener: (context, state) {
+            listener: (context, state) async {
               print(state.contents);
+
             },
             child: Stack(
               children: [
@@ -114,7 +116,6 @@ class _HomeState extends State<Home> {
                               child: IconButton(
                                 onPressed: () {
                                   if (textEditingController.text.isNotEmpty) {
-
                                     chatBloc.add(
                                       ChatEvent.send(
                                         text: textEditingController.text.trim(),

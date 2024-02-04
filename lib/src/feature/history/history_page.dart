@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 
 class HistoryPage extends StatelessWidget {
-  const HistoryPage({super.key});
+  final double radius;
+
+  const HistoryPage({
+    required this.radius,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return ClipRRect(
+      borderRadius: BorderRadius.all(Radius.circular(radius)),
+      child: Scaffold(),
+    );
   }
 }
