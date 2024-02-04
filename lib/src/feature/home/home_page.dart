@@ -52,24 +52,31 @@ class _HomePageState extends State<HomePage> {
                         ..rotateY((pi / 6) * val),
                       child: ValueListenableBuilder(
                         valueListenable: index,
-                        builder: (context, value, child) => IndexedStack(
-                          index: value,
-                          children: [
-                            Home(
-                              radius: item == 1 ? 20 : 0,
-                            ),
-                            Home(
-                              radius: item == 1 ? 20 : 0,
-                            ),
-                            HistoryPage(
-                              radius: item == 1 ? 20 : 0,
-                            ),
-                             Developers(
-                               radius: item == 1 ? 20 : 0,
-                             ),
-                            const About(),
-                          ],
-                        ),
+                        builder: (context, value, child) {
+                          return IndexedStack(
+                            index: value,
+                            children: [
+                              Builder(
+                                builder: (context) {
+                                  return Home(
+                                    radius: item == 1 ? 20 : 0,
+                                  );
+                                },
+                              ),
+                              const Placeholder(),
+                              // Home(
+                              //   radius: item == 1 ? 20 : 0,
+                              // ),
+                              HistoryPage(
+                                radius: item == 1 ? 20 : 0,
+                              ),
+                              Developers(
+                                radius: item == 1 ? 20 : 0,
+                              ),
+                              const About(),
+                            ],
+                          );
+                        },
                       ),
                     ));
                   },

@@ -17,7 +17,8 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   Gemini.init(
-    apiKey: 'AIzaSyC_8npw0TpHH4mRNZZwCSU7T6vbZCv2uPA',
+    apiKey: "AIzaSyBanRLsTZmPPj7zszlc5bmz8jMGmkNYT_c",
+    // 'AIzaSyC_8npw0TpHH4mRNZZwCSU7T6vbZCv2uPA',
     enableDebugging: true,
   );
   

@@ -36,7 +36,14 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           )),
       ));
       await streamSubscription?.cancel();
-      await for (final event in _gemini.streamChat(state.contents)) {
+      final strem = _gemini.streamChat(
+        state.contents,
+        generationConfig: GenerationConfig(),
+      );
+      strem.listen((event) {
+        print(event.output);
+      });
+      await for (final event in strem) {
         List<Content> contents = [];
         if (state.contents.isNotEmpty &&
             state.contents.last.role == event.content?.role) {
@@ -58,7 +65,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
             state.copyWith(contents: contents),
           );
         }
-
       }
     } catch (_) {
       emit(state.copyWith(
