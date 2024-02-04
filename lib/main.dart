@@ -16,6 +16,8 @@ Future<void> main() async {
     apiKey: 'AIzaSyBanRLsTZmPPj7zszlc5bmz8jMGmkNYT_c',
     enableDebugging: true,
   );
+  
   Bloc.observer = ObServer();
+
   runApp(const App());
 }
