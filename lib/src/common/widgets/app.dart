@@ -1,4 +1,5 @@
 
+import 'package:ai_project/src/feature/home/home_page.dart';
 import 'package:flutter/material.dart';
 
 import '../../feature/splash_page/splash_page.dart';

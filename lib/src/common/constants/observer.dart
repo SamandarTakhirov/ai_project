@@ -7,14 +7,10 @@ class ObServer implements BlocObserver {
   }
 
   @override
-  void onClose(BlocBase bloc) {
-    // TODO: implement onClose
-  }
+  void onClose(BlocBase bloc) {}
 
   @override
-  void onCreate(BlocBase bloc) {
-    // TODO: implement onCreate
-  }
+  void onCreate(BlocBase bloc) {}
 
   @override
   void onError(BlocBase bloc, Object error, StackTrace stackTrace) {
@@ -29,6 +25,5 @@ class ObServer implements BlocObserver {
 
   @override
   void onTransition(Bloc bloc, Transition transition) {
-    // TODO: implement onTransition
   }
 }

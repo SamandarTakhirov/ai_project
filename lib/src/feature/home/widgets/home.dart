@@ -1,7 +1,5 @@
 // ignore_for_file: deprecated_member_use
 
-import 'dart:async';
-
 import 'package:ai_project/src/common/utils/context_utils.dart';
 
 import 'package:flutter_gemini/src/models/candidates/candidates.dart';
@@ -16,12 +14,11 @@ import 'package:ai_project/src/common/constants/app_images.dart';
 import 'chat_page.dart';
 
 class Home extends StatefulWidget {
-  final double radius;
-
   const Home({
     required this.radius,
     super.key,
   });
+  final ValueNotifier<double> radius;
 
   @override
   State<Home> createState() => _HomeState();
@@ -57,19 +54,30 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.all(
-        Radius.circular(widget.radius),
-      ),
+    return ValueListenableBuilder(
+      valueListenable: widget.radius,
+      builder: (context, radiusValue, child) {
+        return ClipRRect(
+          borderRadius: BorderRadius.all(
+            Radius.circular(radiusValue == 1 ? 20 : 0),
+          ),
+          child: child,
+        );
+      },
       child: Scaffold(
         backgroundColor: AppColors.white,
         appBar: AppBar(
           surfaceTintColor: Colors.transparent,
           backgroundColor: AppColors.white,
-          leading: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Image.asset(
-              AppIcons.flora,
+          leading: GestureDetector(
+            onTap: () {
+              widget.radius.value = 1;
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image.asset(
+                AppIcons.flora,
+              ),
             ),
           ),
           title: Text(
@@ -94,11 +102,13 @@ class _HomeState extends State<Home> {
               child: ValueListenableBuilder(
                 valueListenable: notifier,
                 builder: (context, contents, value) {
-                  print("${contents.length}----------------------LEngth");
+                  print("##############${notifier.toString()}");
                   return StreamBuilder(
                     stream: _gemini.streamChat(contents),
                     builder: (context, snapshot) {
-
+                      print(snapshot.connectionState);
+                      print(
+                          "${snapshot.data?.toJson()}------------------------------------------------");
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 70),
                         child: ChatPage(
@@ -137,49 +147,55 @@ class _HomeState extends State<Home> {
                         padding: EdgeInsets.symmetric(
                           horizontal: size.width * 0.05,
                         ),
-                        child: TextField(
-                          controller: textEditingController,
-                          enabled: widget.radius > 0 ? false : true,
-                          maxLines: 1,
-                          cursorColor: AppColors.black,
-                          decoration: InputDecoration(
-                            suffixIcon: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: IconButton(
-                                onPressed: () async {
-                                  if (textEditingController.text.isNotEmpty) {
-                                    final Content userContent = Content(
-                                      parts: [
-                                        Parts(
-                                          text: textEditingController.text,
-                                        )
-                                      ],
-                                      role: "user",
-                                    );
-                                    notifier.add(userContent);
-                                    textEditingController.clear();
-                                  }
-                                },
-                                icon: Image(
-                                  width: 35,
-                                  color: AppColors.black,
-                                  image: AssetImage(AppImages.send),
+                        child: ValueListenableBuilder(
+                            valueListenable: widget.radius,
+                            builder: (context, radiusValue, child) {
+                              return TextField(
+                                controller: textEditingController,
+                                enabled: radiusValue > 0 ? false : true,
+                                maxLines: 1,
+                                cursorColor: AppColors.black,
+                                decoration: InputDecoration(
+                                  suffixIcon: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: IconButton(
+                                      onPressed: () async {
+                                        if (textEditingController
+                                            .text.isNotEmpty) {
+                                          final Content userContent = Content(
+                                            parts: [
+                                              Parts(
+                                                text:
+                                                    textEditingController.text,
+                                              )
+                                            ],
+                                            role: "user",
+                                          );
+                                          notifier.add(userContent);
+                                          textEditingController.clear();
+                                        }
+                                      },
+                                      icon: Image(
+                                        width: 35,
+                                        color: AppColors.black,
+                                        image: AssetImage(AppImages.send),
+                                      ),
+                                    ),
+                                  ),
+                                  hintText: "Send a message.",
+                                  border: const OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                  ),
+                                  focusedBorder: const OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            hintText: "Send a message.",
-                            border: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10),
-                              ),
-                            ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10),
-                              ),
-                            ),
-                          ),
-                        ),
+                              );
+                            }),
                       ),
                     ),
                   ],

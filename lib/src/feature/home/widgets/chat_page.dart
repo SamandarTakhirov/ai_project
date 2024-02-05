@@ -1,9 +1,11 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+
+import 'package:flutter_gemini/src/models/candidates/candidates.dart';
 
 import 'home.dart';
 
 class ChatPage extends StatelessWidget {
-  final AsyncSnapshot snapshot;
+  final AsyncSnapshot<Candidates> snapshot;
   final MyNotifier notifier;
 
   const ChatPage({
@@ -20,19 +22,21 @@ class ChatPage extends StatelessWidget {
       );
     }
 
-    final candidates = snapshot.data!;
-    notifier.addParts(candidates);
-    String a = notifier.value.map((e) {
-      "${e.parts?.map((e) => e.text).join()}\n\n";
-    }).join();
-
-    List<String> b = List.generate(
-        a.split("\n\n").length, (index) => a.split("\n\n").join());
+    if (snapshot.hasData &&
+        snapshot.connectionState != ConnectionState.waiting) {
+      notifier.addParts(snapshot.data!);
+    }
     return ListView.builder(
       itemBuilder: (context, index) {
-        return Text(b[index]);
+        if (snapshot.connectionState == ConnectionState.waiting &&
+            index == notifier.value.length) {
+          return const CupertinoActivityIndicator();
+        }
+        final content = notifier.value[index];
+        return Text("${content.parts?.map((e) => e.text).join()}\n\n");
       },
-      itemCount: b.length,
+      itemCount: notifier.value.length +
+          (snapshot.connectionState == ConnectionState.waiting ? 1 : 0),
     );
   }
 }

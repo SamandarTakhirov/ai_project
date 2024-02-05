@@ -1,11 +1,8 @@
 import 'package:ai_project/src/common/constants/app_colors.dart';
 import 'package:ai_project/src/feature/home/home_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-
-import 'review_page.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -24,6 +21,15 @@ class _SplashPageState extends State<SplashPage>
   Future<void> checkVersion() async {
     final package = await PackageInfo.fromPlatform();
     version.value = package.version;
+    await Future.delayed(const Duration(seconds: 3));
+    if (mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const HomePage(),
+        ),
+      );
+    }
   }
 
   @override
@@ -34,29 +40,13 @@ class _SplashPageState extends State<SplashPage>
       duration: const Duration(seconds: 8),
     )..repeat();
     animation = Tween(begin: 0.0, end: 1.0).animate(controller);
-    checkVersion().then((value) => openReviewPage());
+    checkVersion();
   }
 
   @override
   void dispose() {
     controller.dispose();
     super.dispose();
-  }
-
-  void openReviewPage() {
-    Future.delayed(
-      const Duration(seconds: 3),
-      () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => FirebaseAuth.instance.currentUser == null
-                ? const ReviewPage()
-                : const HomePage(),
-          ),
-        );
-      },
-    );
   }
 
   @override
