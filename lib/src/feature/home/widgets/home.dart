@@ -13,6 +13,8 @@ import 'package:ai_project/src/common/constants/app_colors.dart';
 import 'package:ai_project/src/common/constants/app_icons.dart';
 import 'package:ai_project/src/common/constants/app_images.dart';
 
+import 'chat_page.dart';
+
 class Home extends StatefulWidget {
   final double radius;
 
@@ -33,7 +35,7 @@ class _HomeState extends State<Home> {
       Content(
         parts: [
           Parts(
-            text: "Basic data of Flutter",
+            text: "Hello",
           ),
         ],
         role: "user",
@@ -96,22 +98,13 @@ class _HomeState extends State<Home> {
                   return StreamBuilder(
                     stream: _gemini.streamChat(contents),
                     builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return Center(
-                          child: Text(snapshot.error.toString()),
-                        );
-                      }
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                      final candidates = snapshot.data!;
-                      notifier.addParts(candidates);
-                      return SingleChildScrollView(
-                        child: Text(notifier.value.map((e) {
-                          return "${e.parts?.map((e) => e.text).join()}\n\n";
-                        }).join()),
+
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 70),
+                        child: ChatPage(
+                          notifier: notifier,
+                          snapshot: snapshot,
+                        ),
                       );
                     },
                   );
@@ -138,49 +131,52 @@ class _HomeState extends State<Home> {
                     SizedBox(
                       height: size.height * 0.03,
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: size.width * 0.05,
-                      ),
-                      child: TextField(
-                        controller: textEditingController,
-                        enabled: widget.radius > 0 ? false : true,
-                        maxLines: 1,
-                        cursorColor: AppColors.black,
-                        decoration: InputDecoration(
-                          suffixIcon: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: IconButton(
-                              onPressed: () async {
-                                if (textEditingController.text.isNotEmpty) {
-                                  final Content userContent = Content(
-                                    parts: [
-                                      Parts(
-                                        text: textEditingController.text,
-                                      )
-                                    ],
-                                    role: "user",
-                                  );
-                                  notifier.add(userContent);
-                                  textEditingController.clear();
-                                }
-                              },
-                              icon: Image(
-                                width: 35,
-                                color: AppColors.black,
-                                image: AssetImage(AppImages.send),
+                    ColoredBox(
+                      color: AppColors.white,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: size.width * 0.05,
+                        ),
+                        child: TextField(
+                          controller: textEditingController,
+                          enabled: widget.radius > 0 ? false : true,
+                          maxLines: 1,
+                          cursorColor: AppColors.black,
+                          decoration: InputDecoration(
+                            suffixIcon: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: IconButton(
+                                onPressed: () async {
+                                  if (textEditingController.text.isNotEmpty) {
+                                    final Content userContent = Content(
+                                      parts: [
+                                        Parts(
+                                          text: textEditingController.text,
+                                        )
+                                      ],
+                                      role: "user",
+                                    );
+                                    notifier.add(userContent);
+                                    textEditingController.clear();
+                                  }
+                                },
+                                icon: Image(
+                                  width: 35,
+                                  color: AppColors.black,
+                                  image: AssetImage(AppImages.send),
+                                ),
                               ),
                             ),
-                          ),
-                          hintText: "Send a message.",
-                          border: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
+                            hintText: "Send a message.",
+                            border: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
                             ),
-                          ),
-                          focusedBorder: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
+                            focusedBorder: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
                             ),
                           ),
                         ),
