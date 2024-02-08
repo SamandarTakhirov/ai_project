@@ -1,42 +1,27 @@
-import 'package:flutter/cupertino.dart';
-
-import 'package:flutter_gemini/src/models/candidates/candidates.dart';
-
-import 'home.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gemini/flutter_gemini.dart';
 
 class ChatPage extends StatelessWidget {
-  final AsyncSnapshot<Candidates> snapshot;
-  final MyNotifier notifier;
+  final List<Content> contents;
+  final ScrollController controller;
 
   const ChatPage({
-    required this.snapshot,
-    required this.notifier,
     super.key,
+    required this.contents,
+    required this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
-    if (snapshot.hasError) {
-      return Center(
-        child: Text(snapshot.error.toString()),
-      );
-    }
-
-    if (snapshot.hasData &&
-        snapshot.connectionState != ConnectionState.waiting) {
-      notifier.addParts(snapshot.data!);
-    }
     return ListView.builder(
+      controller: controller,
       itemBuilder: (context, index) {
-        if (snapshot.connectionState == ConnectionState.waiting &&
-            index == notifier.value.length) {
-          return const CupertinoActivityIndicator();
-        }
-        final content = notifier.value[index];
-        return Text("${content.parts?.map((e) => e.text).join()}\n\n");
+        return ListTile(
+          title: Text(
+              contents.elementAt(index).parts?.map((e) => e.text).join() ?? ""),
+        );
       },
-      itemCount: notifier.value.length +
-          (snapshot.connectionState == ConnectionState.waiting ? 1 : 0),
+      itemCount: contents.length,
     );
   }
 }

@@ -1,8 +1,9 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:ai_project/src/common/utils/context_utils.dart';
+import 'package:ai_project/src/feature/home/bloc/chat_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:flutter_gemini/src/models/candidates/candidates.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -26,29 +27,21 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late final TextEditingController textEditingController;
+  final MyNotifier notifier = MyNotifier([]);
+  late final ScrollController _scrollController;
   static final _gemini = Gemini.instance;
-  final MyNotifier notifier = MyNotifier(
-    [
-      Content(
-        parts: [
-          Parts(
-            text: "Hello",
-          ),
-        ],
-        role: "user",
-      ),
-    ],
-  );
 
   @override
   void initState() {
     textEditingController = TextEditingController();
+    _scrollController = ScrollController();
     super.initState();
   }
 
   @override
   void dispose() {
     textEditingController.clear();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -96,36 +89,35 @@ class _HomeState extends State<Home> {
             ),
           ],
         ),
-        body: Stack(
+        body: Column(
           children: [
-            Positioned.fill(
+            Expanded(
               child: ValueListenableBuilder(
                 valueListenable: notifier,
-                builder: (context, contents, value) {
-                  print("##############${notifier.toString()}");
-                  return StreamBuilder(
-                    stream: _gemini.streamChat(contents),
-                    builder: (context, snapshot) {
-                      print(snapshot.connectionState);
-                      print(
-                          "${snapshot.data?.toJson()}------------------------------------------------");
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 70),
-                        child: ChatPage(
-                          notifier: notifier,
-                          snapshot: snapshot,
-                        ),
+                builder: (context, value, child) {
+                  if (value.isEmpty) {
+                    return const Center(
+                      child: Text("Suhbatni boshlash uchun yozing"),
+                    );
+                  }
+                  WidgetsBinding.instance.addPostFrameCallback(
+                    (timeStamp) {
+                      _scrollController.animateTo(
+                        _scrollController.position.maxScrollExtent,
+                        duration: const Duration(milliseconds: 400),
+                        curve: Curves.easeInOut,
                       );
                     },
+                  );
+                  return ChatPage(
+                    contents: value,
+                    controller: _scrollController,
                   );
                 },
               ),
             ),
-            Positioned(
-              bottom: 10,
-              left: 1,
-              right: 1,
-              child: Builder(builder: (context) {
+            Builder(
+              builder: (context) {
                 final size = MediaQuery.sizeOf(context);
                 return Column(
                   children: [
@@ -162,16 +154,14 @@ class _HomeState extends State<Home> {
                                       onPressed: () async {
                                         if (textEditingController
                                             .text.isNotEmpty) {
-                                          final Content userContent = Content(
-                                            parts: [
-                                              Parts(
-                                                text:
-                                                    textEditingController.text,
-                                              )
-                                            ],
-                                            role: "user",
-                                          );
-                                          notifier.add(userContent);
+                                          notifier
+                                              .add(textEditingController.text);
+                                          _gemini
+                                              .streamChat(notifier.value)
+                                              .listen((event) {
+                                            notifier
+                                                .addFromModel(event.content);
+                                          });
                                           textEditingController.clear();
                                         }
                                       },
@@ -200,12 +190,36 @@ class _HomeState extends State<Home> {
                     ),
                   ],
                 );
-              }),
+              },
             ),
           ],
         ),
       ),
     );
+  }
+}
+
+class MyNotifier extends ValueNotifier<List<Content>> {
+  MyNotifier(super.value);
+  void add(String text) {
+    final content = Content(
+      parts: [
+        Parts(text: text),
+      ],
+      role: "user",
+    );
+    value.add(content);
+    notifyListeners();
+  }
+
+  void addFromModel(Content? content) {
+    if (content == null || content.parts == null) return;
+    if (value.last.role == "model") {
+      value.last.parts?.addAll(content.parts ?? []);
+    } else {
+      value.add(content);
+    }
+    notifyListeners();
   }
 }
 
@@ -241,28 +255,3 @@ Widget _customButton({
         ],
       ),
     );
-
-class MyNotifier extends ValueNotifier<List<Content>> {
-  MyNotifier(super.value);
-
-  void add(Content newContent) {
-    value.add(newContent);
-    notifyListeners();
-  }
-
-  void addParts(Candidates candidate) {
-    if (value.last.role == "user") {
-      value.add(candidate.content!);
-    } else {
-      value.last.parts?.add(candidate.content!.parts!.single);
-    }
-  }
-
-  void setWithoutNotify(List<Content> contents) => value = contents.toList();
-
-  @override
-  set value(List<Content> newValue) {
-    value = newValue.toList();
-    notifyListeners();
-  }
-}

@@ -1,8 +1,10 @@
 import 'dart:math';
 
 import 'package:ai_project/src/common/constants/app_colors.dart';
+import 'package:ai_project/src/feature/home/bloc/chat_bloc.dart';
 import 'package:ai_project/src/feature/home/widgets/home.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../about/about.dart';
 import '../developers/developers.dart';

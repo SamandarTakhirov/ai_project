@@ -21,6 +21,7 @@ mixin _$ChatEvent {
     required TResult Function(String text) send,
     required TResult Function() rest,
     required TResult Function() stop,
+    required TResult Function(Content? content) addFromModel,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -28,6 +29,7 @@ mixin _$ChatEvent {
     TResult? Function(String text)? send,
     TResult? Function()? rest,
     TResult? Function()? stop,
+    TResult? Function(Content? content)? addFromModel,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -35,6 +37,7 @@ mixin _$ChatEvent {
     TResult Function(String text)? send,
     TResult Function()? rest,
     TResult Function()? stop,
+    TResult Function(Content? content)? addFromModel,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -43,6 +46,7 @@ mixin _$ChatEvent {
     required TResult Function(_SendEvent value) send,
     required TResult Function(_RestartEvent value) rest,
     required TResult Function(_StopEvent value) stop,
+    required TResult Function(_AddFromModel value) addFromModel,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -50,6 +54,7 @@ mixin _$ChatEvent {
     TResult? Function(_SendEvent value)? send,
     TResult? Function(_RestartEvent value)? rest,
     TResult? Function(_StopEvent value)? stop,
+    TResult? Function(_AddFromModel value)? addFromModel,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -57,6 +62,7 @@ mixin _$ChatEvent {
     TResult Function(_SendEvent value)? send,
     TResult Function(_RestartEvent value)? rest,
     TResult Function(_StopEvent value)? stop,
+    TResult Function(_AddFromModel value)? addFromModel,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -146,6 +152,7 @@ class _$SendEventImpl implements _SendEvent {
     required TResult Function(String text) send,
     required TResult Function() rest,
     required TResult Function() stop,
+    required TResult Function(Content? content) addFromModel,
   }) {
     return send(text);
   }
@@ -156,6 +163,7 @@ class _$SendEventImpl implements _SendEvent {
     TResult? Function(String text)? send,
     TResult? Function()? rest,
     TResult? Function()? stop,
+    TResult? Function(Content? content)? addFromModel,
   }) {
     return send?.call(text);
   }
@@ -166,6 +174,7 @@ class _$SendEventImpl implements _SendEvent {
     TResult Function(String text)? send,
     TResult Function()? rest,
     TResult Function()? stop,
+    TResult Function(Content? content)? addFromModel,
     required TResult orElse(),
   }) {
     if (send != null) {
@@ -180,6 +189,7 @@ class _$SendEventImpl implements _SendEvent {
     required TResult Function(_SendEvent value) send,
     required TResult Function(_RestartEvent value) rest,
     required TResult Function(_StopEvent value) stop,
+    required TResult Function(_AddFromModel value) addFromModel,
   }) {
     return send(this);
   }
@@ -190,6 +200,7 @@ class _$SendEventImpl implements _SendEvent {
     TResult? Function(_SendEvent value)? send,
     TResult? Function(_RestartEvent value)? rest,
     TResult? Function(_StopEvent value)? stop,
+    TResult? Function(_AddFromModel value)? addFromModel,
   }) {
     return send?.call(this);
   }
@@ -200,6 +211,7 @@ class _$SendEventImpl implements _SendEvent {
     TResult Function(_SendEvent value)? send,
     TResult Function(_RestartEvent value)? rest,
     TResult Function(_StopEvent value)? stop,
+    TResult Function(_AddFromModel value)? addFromModel,
     required TResult orElse(),
   }) {
     if (send != null) {
@@ -259,6 +271,7 @@ class _$RestartEventImpl implements _RestartEvent {
     required TResult Function(String text) send,
     required TResult Function() rest,
     required TResult Function() stop,
+    required TResult Function(Content? content) addFromModel,
   }) {
     return rest();
   }
@@ -269,6 +282,7 @@ class _$RestartEventImpl implements _RestartEvent {
     TResult? Function(String text)? send,
     TResult? Function()? rest,
     TResult? Function()? stop,
+    TResult? Function(Content? content)? addFromModel,
   }) {
     return rest?.call();
   }
@@ -279,6 +293,7 @@ class _$RestartEventImpl implements _RestartEvent {
     TResult Function(String text)? send,
     TResult Function()? rest,
     TResult Function()? stop,
+    TResult Function(Content? content)? addFromModel,
     required TResult orElse(),
   }) {
     if (rest != null) {
@@ -293,6 +308,7 @@ class _$RestartEventImpl implements _RestartEvent {
     required TResult Function(_SendEvent value) send,
     required TResult Function(_RestartEvent value) rest,
     required TResult Function(_StopEvent value) stop,
+    required TResult Function(_AddFromModel value) addFromModel,
   }) {
     return rest(this);
   }
@@ -303,6 +319,7 @@ class _$RestartEventImpl implements _RestartEvent {
     TResult? Function(_SendEvent value)? send,
     TResult? Function(_RestartEvent value)? rest,
     TResult? Function(_StopEvent value)? stop,
+    TResult? Function(_AddFromModel value)? addFromModel,
   }) {
     return rest?.call(this);
   }
@@ -313,6 +330,7 @@ class _$RestartEventImpl implements _RestartEvent {
     TResult Function(_SendEvent value)? send,
     TResult Function(_RestartEvent value)? rest,
     TResult Function(_StopEvent value)? stop,
+    TResult Function(_AddFromModel value)? addFromModel,
     required TResult orElse(),
   }) {
     if (rest != null) {
@@ -367,6 +385,7 @@ class _$StopEventImpl implements _StopEvent {
     required TResult Function(String text) send,
     required TResult Function() rest,
     required TResult Function() stop,
+    required TResult Function(Content? content) addFromModel,
   }) {
     return stop();
   }
@@ -377,6 +396,7 @@ class _$StopEventImpl implements _StopEvent {
     TResult? Function(String text)? send,
     TResult? Function()? rest,
     TResult? Function()? stop,
+    TResult? Function(Content? content)? addFromModel,
   }) {
     return stop?.call();
   }
@@ -387,6 +407,7 @@ class _$StopEventImpl implements _StopEvent {
     TResult Function(String text)? send,
     TResult Function()? rest,
     TResult Function()? stop,
+    TResult Function(Content? content)? addFromModel,
     required TResult orElse(),
   }) {
     if (stop != null) {
@@ -401,6 +422,7 @@ class _$StopEventImpl implements _StopEvent {
     required TResult Function(_SendEvent value) send,
     required TResult Function(_RestartEvent value) rest,
     required TResult Function(_StopEvent value) stop,
+    required TResult Function(_AddFromModel value) addFromModel,
   }) {
     return stop(this);
   }
@@ -411,6 +433,7 @@ class _$StopEventImpl implements _StopEvent {
     TResult? Function(_SendEvent value)? send,
     TResult? Function(_RestartEvent value)? rest,
     TResult? Function(_StopEvent value)? stop,
+    TResult? Function(_AddFromModel value)? addFromModel,
   }) {
     return stop?.call(this);
   }
@@ -421,6 +444,7 @@ class _$StopEventImpl implements _StopEvent {
     TResult Function(_SendEvent value)? send,
     TResult Function(_RestartEvent value)? rest,
     TResult Function(_StopEvent value)? stop,
+    TResult Function(_AddFromModel value)? addFromModel,
     required TResult orElse(),
   }) {
     if (stop != null) {
@@ -432,6 +456,165 @@ class _$StopEventImpl implements _StopEvent {
 
 abstract class _StopEvent implements ChatEvent {
   const factory _StopEvent() = _$StopEventImpl;
+}
+
+/// @nodoc
+abstract class _$$AddFromModelImplCopyWith<$Res> {
+  factory _$$AddFromModelImplCopyWith(
+          _$AddFromModelImpl value, $Res Function(_$AddFromModelImpl) then) =
+      __$$AddFromModelImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({Content? content});
+
+  $ContentCopyWith<$Res>? get content;
+}
+
+/// @nodoc
+class __$$AddFromModelImplCopyWithImpl<$Res>
+    extends _$ChatEventCopyWithImpl<$Res, _$AddFromModelImpl>
+    implements _$$AddFromModelImplCopyWith<$Res> {
+  __$$AddFromModelImplCopyWithImpl(
+      _$AddFromModelImpl _value, $Res Function(_$AddFromModelImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? content = freezed,
+  }) {
+    return _then(_$AddFromModelImpl(
+      freezed == content
+          ? _value.content
+          : content // ignore: cast_nullable_to_non_nullable
+              as Content?,
+    ));
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $ContentCopyWith<$Res>? get content {
+    if (_value.content == null) {
+      return null;
+    }
+
+    return $ContentCopyWith<$Res>(_value.content!, (value) {
+      return _then(_value.copyWith(content: value));
+    });
+  }
+}
+
+/// @nodoc
+
+class _$AddFromModelImpl implements _AddFromModel {
+  const _$AddFromModelImpl(this.content);
+
+  @override
+  final Content? content;
+
+  @override
+  String toString() {
+    return 'ChatEvent.addFromModel(content: $content)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AddFromModelImpl &&
+            (identical(other.content, content) || other.content == content));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, content);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$AddFromModelImplCopyWith<_$AddFromModelImpl> get copyWith =>
+      __$$AddFromModelImplCopyWithImpl<_$AddFromModelImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String text) send,
+    required TResult Function() rest,
+    required TResult Function() stop,
+    required TResult Function(Content? content) addFromModel,
+  }) {
+    return addFromModel(content);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String text)? send,
+    TResult? Function()? rest,
+    TResult? Function()? stop,
+    TResult? Function(Content? content)? addFromModel,
+  }) {
+    return addFromModel?.call(content);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String text)? send,
+    TResult Function()? rest,
+    TResult Function()? stop,
+    TResult Function(Content? content)? addFromModel,
+    required TResult orElse(),
+  }) {
+    if (addFromModel != null) {
+      return addFromModel(content);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_SendEvent value) send,
+    required TResult Function(_RestartEvent value) rest,
+    required TResult Function(_StopEvent value) stop,
+    required TResult Function(_AddFromModel value) addFromModel,
+  }) {
+    return addFromModel(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_SendEvent value)? send,
+    TResult? Function(_RestartEvent value)? rest,
+    TResult? Function(_StopEvent value)? stop,
+    TResult? Function(_AddFromModel value)? addFromModel,
+  }) {
+    return addFromModel?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_SendEvent value)? send,
+    TResult Function(_RestartEvent value)? rest,
+    TResult Function(_StopEvent value)? stop,
+    TResult Function(_AddFromModel value)? addFromModel,
+    required TResult orElse(),
+  }) {
+    if (addFromModel != null) {
+      return addFromModel(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _AddFromModel implements ChatEvent {
+  const factory _AddFromModel(final Content? content) = _$AddFromModelImpl;
+
+  Content? get content;
+  @JsonKey(ignore: true)
+  _$$AddFromModelImplCopyWith<_$AddFromModelImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc

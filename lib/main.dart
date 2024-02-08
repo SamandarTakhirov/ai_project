@@ -18,6 +18,7 @@ Future<void> main() async {
   );
   Gemini.init(
     apiKey: "AIzaSyC_8npw0TpHH4mRNZZwCSU7T6vbZCv2uPA",
+    
     // 'AIzaSyC_8npw0TpHH4mRNZZwCSU7T6vbZCv2uPA',
     enableDebugging: true,
   );
