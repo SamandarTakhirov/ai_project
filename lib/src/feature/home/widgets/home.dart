@@ -1,8 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:ai_project/src/common/utils/context_utils.dart';
-import 'package:ai_project/src/feature/home/bloc/chat_bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
@@ -19,6 +17,7 @@ class Home extends StatefulWidget {
     required this.radius,
     super.key,
   });
+
   final ValueNotifier<double> radius;
 
   @override
@@ -30,6 +29,16 @@ class _HomeState extends State<Home> {
   final MyNotifier notifier = MyNotifier([]);
   late final ScrollController _scrollController;
   static final _gemini = Gemini.instance;
+
+  List<String> questions = [
+
+    "FloraAI haqida to'liq ma'lumot",
+    "Dasturchilar haqida ma'lumot",
+    "O'zbekiston 2024",
+    "What is Flora",
+    "What weather today",
+    "Who is best Uzbek or English",
+  ];
 
   @override
   void initState() {
@@ -47,6 +56,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
     return ValueListenableBuilder(
       valueListenable: widget.radius,
       builder: (context, radiusValue, child) {
@@ -96,8 +106,50 @@ class _HomeState extends State<Home> {
                 valueListenable: notifier,
                 builder: (context, value, child) {
                   if (value.isEmpty) {
-                    return const Center(
-                      child: Text("Suhbatni boshlash uchun yozing"),
+                    return Padding(
+                      padding: EdgeInsets.all(size.width * 0.05),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                "Savollaringizni yozishingiz yoki tezkor savollardan foydalanishingiz mumkin",
+                                textAlign: TextAlign.center,
+                                style: context.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                          GridView.builder(
+                            shrinkWrap: true,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: size.width * 0.02,
+                              mainAxisExtent: size.height * 0.1,
+                              mainAxisSpacing: size.width * 0.02,
+                              childAspectRatio: 20,
+                            ),
+                            itemCount: questions.length,
+                            itemBuilder: (context, index) {
+                              return _CustomTextButton(
+                                onTap: () async {
+                                  notifier.add(questions[index]);
+                                  _gemini
+                                      .streamChat(notifier.value)
+                                      .listen((event) {
+                                    notifier.addFromModel(event.content);
+                                  });
+                                },
+                                size: size,
+                                text: questions[index],
+                              );
+                            },
+                          ),
+                        ],
+                      ),
                     );
                   }
                   WidgetsBinding.instance.addPostFrameCallback(
@@ -131,13 +183,15 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                     SizedBox(
-                      height: size.height * 0.03,
+                      height: size.height * 0.01,
                     ),
                     ColoredBox(
                       color: AppColors.white,
                       child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: size.width * 0.05,
+                        padding: EdgeInsets.only(
+                          left: size.width * 0.05,
+                          right: size.width * 0.05,
+                          bottom: 10,
                         ),
                         child: ValueListenableBuilder(
                             valueListenable: widget.radius,
@@ -199,8 +253,48 @@ class _HomeState extends State<Home> {
   }
 }
 
+class _CustomTextButton extends StatelessWidget {
+  final Size size;
+  final String text;
+  final void Function() onTap;
+
+  const _CustomTextButton({
+    required this.size,
+    required this.text,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: AppColors.aiTextBKG,
+          borderRadius: const BorderRadius.all(
+            Radius.circular(10),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Center(
+            child: Text(
+              text,
+              textAlign: TextAlign.center,
+              style: context.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class MyNotifier extends ValueNotifier<List<Content>> {
   MyNotifier(super.value);
+
   void add(String text) {
     final content = Content(
       parts: [
