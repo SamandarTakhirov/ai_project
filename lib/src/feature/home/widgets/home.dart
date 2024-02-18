@@ -185,7 +185,7 @@ class _HomeState extends State<Home> {
                           child: _customButton(
                             icon: AppIcons.rest,
                             context: context,
-                            text: running ? "" : "Regenerate Response",
+                            text: running ? "Stop" : "Regenerate Response",
                             size: size,
                             onPressed: running
                                 ? () {
