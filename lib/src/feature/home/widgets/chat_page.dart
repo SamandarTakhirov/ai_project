@@ -1,7 +1,6 @@
 import 'package:ai_project/src/common/utils/context_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../common/constants/app_colors.dart';
 import '../../../common/constants/app_icons.dart';
