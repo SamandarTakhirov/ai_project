@@ -1,6 +1,14 @@
+import 'dart:typed_data';
+
 import 'package:ai_project/src/common/utils/context_utils.dart';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:lottie/lottie.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../common/constants/app_colors.dart';
 import '../../../common/constants/app_icons.dart';
@@ -20,9 +28,30 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
+  late final ScreenshotController screenshotController;
+
+  Future<String> saveImage(Uint8List bytes) async {
+    await [Permission.storage].request();
+    final time = DateTime.now().millisecondsSinceEpoch;
+
+    final result = await ImageGallerySaver.saveImage(
+      bytes,
+      name: "FloraAI_$time",
+    );
+
+    return result["filePath"];
+  }
+
+  @override
+  void initState() {
+    screenshotController = ScreenshotController();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
+
     return ListView.builder(
       controller: widget.controller,
       itemBuilder: (context, index) {
@@ -65,19 +94,30 @@ class _ChatPageState extends State<ChatPage> {
                                 ),
                               ],
                             ),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                _CustomButton(
-                                  onTap: () {},
-                                  icon: Icons.copy,
-                                ),
-                                _CustomButton(
-                                  onTap: () {},
-                                  icon: Icons.share,
-                                ),
-                              ],
-                            )
+                            _CustomButton(
+                              onTap: () async {
+                                final image = await screenshotController
+                                    .captureFromWidget(
+                                  context: context,
+                                  Screenshot(
+                                    controller: screenshotController,
+                                    child: const Column(
+                                      children: [
+                                        Text("quistions"),
+                                        Text("\n\nanswer"),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                                final path = await saveImage(image);
+
+                                await Share.shareXFiles(
+                                  [XFile(path)],
+                                  text: "hello",
+                                );
+                              },
+                              icon: AppIcons.share,
+                            ),
                           ],
                         )
                       : const SizedBox.shrink(),
@@ -119,7 +159,7 @@ class _ChatPageState extends State<ChatPage> {
 
 class _CustomButton extends StatelessWidget {
   final void Function() onTap;
-  final IconData icon;
+  final String icon;
 
   const _CustomButton({
     required this.icon,
@@ -135,9 +175,14 @@ class _CustomButton extends StatelessWidget {
       ),
       padding: const EdgeInsets.all(0),
       onPressed: onTap,
-      icon: Icon(
-        icon,
-        size: 18,
+      icon: SizedBox(
+        width: 18,
+        height: 18,
+        child: Lottie.asset(
+          icon,
+          filterQuality: FilterQuality.high,
+          frameRate: FrameRate.max,
+        ),
       ),
     );
   }
