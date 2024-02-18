@@ -26,6 +26,7 @@ class _ChatPageState extends State<ChatPage> {
     return ListView.builder(
       controller: widget.controller,
       itemBuilder: (context, index) {
+        final isUser = widget.contents.elementAt(index).role == "user";
         return ConstrainedBox(
           constraints: BoxConstraints(
             maxWidth: size.width * 0.2,
@@ -36,26 +37,26 @@ class _ChatPageState extends State<ChatPage> {
             child: DecoratedBox(
               decoration: BoxDecoration(
                 color:
-                    index.isOdd ? AppColors.aiTextBKG : AppColors.userTextBKG,
+                    !isUser ? AppColors.aiTextBKG : AppColors.userTextBKG,
                 borderRadius: BorderRadius.only(
                   topLeft: const Radius.circular(20),
                   topRight: const Radius.circular(20),
                   bottomLeft: Radius.circular(
-                    index.isEven ? 20 : 0,
+                    isUser ? 20 : 0,
                   ),
                   bottomRight: Radius.circular(
-                    index.isEven ? 0 : 20,
+                    isUser ? 0 : 20,
                   ),
                 ),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
-                  crossAxisAlignment: index.isOdd
+                  crossAxisAlignment: !isUser
                       ? CrossAxisAlignment.start
                       : CrossAxisAlignment.end,
                   children: [
-                    index.isOdd
+                    !isUser
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -94,11 +95,11 @@ class _ChatPageState extends State<ChatPage> {
                     Text(
                       "${widget.contents[index].parts?.map((e) => e.text).join()}",
                       textAlign:
-                          index.isEven ? TextAlign.right : TextAlign.left,
+                          isUser ? TextAlign.right : TextAlign.left,
                       style: context.textTheme.titleSmall?.copyWith(
-                        color: index.isEven ? AppColors.white : AppColors.black,
+                        color: isUser ? AppColors.white : AppColors.black,
                         fontWeight:
-                            index.isEven ? FontWeight.w500 : FontWeight.w400,
+                            isUser ? FontWeight.w500 : FontWeight.w400,
                       ),
                     ),
                   ],
