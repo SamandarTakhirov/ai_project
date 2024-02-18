@@ -1,9 +1,10 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 
 class ObServer implements BlocObserver {
   @override
   void onChange(BlocBase bloc, Change change) {
-    print("${change.currentState} to ${change.nextState}");
+    debugPrint("${change.currentState} to ${change.nextState}");
   }
 
   @override
@@ -14,13 +15,13 @@ class ObServer implements BlocObserver {
 
   @override
   void onError(BlocBase bloc, Object error, StackTrace stackTrace) {
-    print(error.toString());
-    print(stackTrace.toString());
+    debugPrint(error.toString());
+    debugPrint(stackTrace.toString());
   }
 
   @override
   void onEvent(Bloc bloc, Object? event) {
-    print(event.toString());
+    debugPrint(event.toString());
   }
 
   @override

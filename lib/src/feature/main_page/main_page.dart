@@ -78,7 +78,7 @@ class MainPage extends StatelessWidget {
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
                             const item = MenusModels.menus;
-                            return _CustomListTile(
+                            return CustomListTile(
                               isActive: value == index,
                               menusModels: item[index],
                               onTap: () {
@@ -94,7 +94,7 @@ class MainPage extends StatelessWidget {
               ),
               Column(
                 children: [
-                  _CustomListTile(
+                  CustomListTile(
                     isActive: false,
                     onTap: () {
                       radius.value = 0;
@@ -148,17 +148,17 @@ Widget _customDecoratedBox({
         child: SvgPicture.asset(
           icon,
           width: 24,
-          color: AppColors.white,
+          colorFilter: ColorFilter.mode(AppColors.white, BlendMode.srcIn),
         ),
       ),
     );
 
-class _CustomListTile extends StatelessWidget {
+class CustomListTile extends StatelessWidget {
   final bool isActive;
   final MenusModels menusModels;
   final void Function() onTap;
 
-  const _CustomListTile({
+  const CustomListTile({
     required this.isActive,
     required this.menusModels,
     required this.onTap,
@@ -189,7 +189,10 @@ class _CustomListTile extends StatelessWidget {
           onTap: onTap,
           leading: SvgPicture.asset(
             menusModels.icon,
-            color: isActive ? Colors.black : AppColors.white,
+            colorFilter: ColorFilter.mode(
+              isActive ? Colors.black : AppColors.white,
+              BlendMode.srcIn,
+            ),
             width: 20,
             height: 20,
           ),

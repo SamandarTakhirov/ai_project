@@ -234,22 +234,18 @@ class _HomeState extends State<Home> {
                                                 .streamChat(notifier.value)
                                                 .listen(
                                               (event) {
-                                                print(
-                                                    "event: ${event.toJson()}");
                                                 notifier.addFromModel(
-                                                    event.content);
+                                                  event.content,
+                                                );
                                               },
-                                            )
-                                              ..onError(
-                                                (e) => print(
-                                                    "##############$e###############"),
-                                              )
-                                              ..onDone(
-                                                () {
-                                                  print("Done");
-                                                  isRunning.value = false;
-                                                },
-                                              );
+                                              onDone: () {
+                                                isRunning.value = false;
+                                              },
+                                              onError: (e) {
+                                                print("Error: $e");
+                                              },
+                                              cancelOnError: true,
+                                            );
 
                                             textEditingController.clear();
                                           }

@@ -12,7 +12,7 @@ class HistoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(radius)),
-      child: Scaffold(),
+      child: const Scaffold(),
     );
   }
 }
