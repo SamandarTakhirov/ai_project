@@ -1,5 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
+import 'dart:async';
+
 import 'package:ai_project/src/common/utils/context_utils.dart';
 
 import 'package:flutter/material.dart';
@@ -30,6 +32,8 @@ class _HomeState extends State<Home> {
   late final ScrollController _scrollController;
   static final _gemini = Gemini.instance;
   final GlobalKey<FormState> key = GlobalKey<FormState>();
+  final ValueNotifier<bool> isRunning = ValueNotifier(false);
+  StreamSubscription? streamSubscription;
 
   List<String> questions = [
     "FloraAI haqida to'liq ma'lumot",
@@ -173,14 +177,25 @@ class _HomeState extends State<Home> {
                 final size = MediaQuery.sizeOf(context);
                 return Column(
                   children: [
-                    Visibility(
-                      visible: false,
-                      child: _customButton(
-                        icon: AppIcons.rest,
-                        context: context,
-                        text: "Regenerate Response",
-                        size: size,
-                      ),
+                    ValueListenableBuilder(
+                      valueListenable: isRunning,
+                      builder: (context, running, _) {
+                        return Visibility(
+                          visible: running,
+                          child: _customButton(
+                            icon: AppIcons.rest,
+                            context: context,
+                            text: running ? "" : "Regenerate Response",
+                            size: size,
+                            onPressed: running
+                                ? () {
+                                    streamSubscription?.cancel();
+                                    isRunning.value = false;
+                                  }
+                                : () {},
+                          ),
+                        );
+                      },
                     ),
                     SizedBox(
                       height: size.height * 0.01,
@@ -196,60 +211,70 @@ class _HomeState extends State<Home> {
                         child: ValueListenableBuilder(
                           valueListenable: widget.radius,
                           builder: (context, radiusValue, child) {
-                            return TextField(
-                              controller: textEditingController,
-                              enabled: radiusValue > 0 ? false : true,
-                              maxLines: 1,
-                              cursorColor: AppColors.black,
-                              decoration: InputDecoration(
-                                suffixIcon: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: IconButton(
-                                    onPressed: () async {
-                                      if (textEditingController
-                                          .text.isNotEmpty) {
-                                        notifier
-                                            .add(textEditingController.text);
-                                        _gemini
-                                            .streamChat(notifier.value)
-                                            .listen(
-                                          (event) {
-                                            print("event: ${event.toJson()}");
-                                            notifier
-                                                .addFromModel(event.content);
-                                          },
-                                        )
-                                          ..onError(
-                                            (e) => print(
-                                                "##############$e###############"),
-                                          )
-                                          ..onDone(
-                                            () => print("Done"),
-                                          )
-                                          ..onData(
-                                              (data) => print("Data is $data"));
-                                        textEditingController.clear();
-                                      }
-                                    },
-                                    icon: Image(
-                                      width: 35,
-                                      color: AppColors.black,
-                                      image: AssetImage(AppImages.send),
+                            return ValueListenableBuilder(
+                              valueListenable: isRunning,
+                              builder: (context, running, _) {
+                                return TextField(
+                                  controller: textEditingController,
+                                  enabled: (radiusValue > 0 ? false : true) &&
+                                      !running,
+                                  maxLines: 1,
+                                  cursorColor: AppColors.black,
+                                  decoration: InputDecoration(
+                                    suffixIcon: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: IconButton(
+                                        onPressed: () async {
+                                          if (textEditingController
+                                              .text.isNotEmpty) {
+                                            isRunning.value = true;
+                                            notifier.add(
+                                                textEditingController.text);
+                                            streamSubscription = _gemini
+                                                .streamChat(notifier.value)
+                                                .listen(
+                                              (event) {
+                                                print(
+                                                    "event: ${event.toJson()}");
+                                                notifier.addFromModel(
+                                                    event.content);
+                                              },
+                                            )
+                                              ..onError(
+                                                (e) => print(
+                                                    "##############$e###############"),
+                                              )
+                                              ..onDone(
+                                                () {
+                                                  print("Done");
+                                                  isRunning.value = false;
+                                                },
+                                              );
+
+                                            textEditingController.clear();
+                                          }
+                                        },
+                                        icon: Image(
+                                          width: 35,
+                                          color: AppColors.black,
+                                          image: AssetImage(AppImages.send),
+                                        ),
+                                      ),
+                                    ),
+                                    hintText: "Send a message.",
+                                    border: const OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10),
+                                      ),
+                                    ),
+                                    focusedBorder: const OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                hintText: "Send a message.",
-                                border: const OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                ),
-                                focusedBorder: const OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                ),
-                              ),
+                                );
+                              },
                             );
                           },
                         ),
@@ -336,9 +361,10 @@ Widget _customButton({
   required Size size,
   required String text,
   required String icon,
+  required VoidCallback onPressed,
 }) =>
     OutlinedButton(
-      onPressed: () {},
+      onPressed: onPressed,
       style: FilledButton.styleFrom(
         fixedSize: Size(
           size.width * 0.6,
