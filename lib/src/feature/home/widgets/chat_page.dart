@@ -5,7 +5,7 @@ import 'package:flutter_gemini/flutter_gemini.dart';
 import '../../../common/constants/app_colors.dart';
 import '../../../common/constants/app_icons.dart';
 
-class ChatPage extends StatelessWidget {
+class ChatPage extends StatefulWidget {
   final List<Content> contents;
   final ScrollController controller;
 
@@ -16,10 +16,15 @@ class ChatPage extends StatelessWidget {
   });
 
   @override
+  State<ChatPage> createState() => _ChatPageState();
+}
+
+class _ChatPageState extends State<ChatPage> {
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     return ListView.builder(
-      controller: controller,
+      controller: widget.controller,
       itemBuilder: (context, index) {
         return ConstrainedBox(
           constraints: BoxConstraints(
@@ -87,7 +92,7 @@ class ChatPage extends StatelessWidget {
                           )
                         : const SizedBox.shrink(),
                     Text(
-                      "${contents[index].parts?.map((e) => e.text).join()}",
+                      "${widget.contents[index].parts?.map((e) => e.text).join()}",
                       textAlign:
                           index.isEven ? TextAlign.right : TextAlign.left,
                       style: context.textTheme.titleSmall?.copyWith(
@@ -103,7 +108,7 @@ class ChatPage extends StatelessWidget {
           ),
         );
       },
-      itemCount: contents.length,
+      itemCount: widget.contents.length,
     );
   }
 }

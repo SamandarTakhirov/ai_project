@@ -29,9 +29,9 @@ class _HomeState extends State<Home> {
   final MyNotifier notifier = MyNotifier([]);
   late final ScrollController _scrollController;
   static final _gemini = Gemini.instance;
+  final GlobalKey<FormState> key = GlobalKey<FormState>();
 
   List<String> questions = [
-
     "FloraAI haqida to'liq ma'lumot",
     "Dasturchilar haqida ma'lumot",
     "O'zbekiston 2024",
@@ -194,52 +194,65 @@ class _HomeState extends State<Home> {
                           bottom: 10,
                         ),
                         child: ValueListenableBuilder(
-                            valueListenable: widget.radius,
-                            builder: (context, radiusValue, child) {
-                              return TextField(
-                                controller: textEditingController,
-                                enabled: radiusValue > 0 ? false : true,
-                                maxLines: 1,
-                                cursorColor: AppColors.black,
-                                decoration: InputDecoration(
-                                  suffixIcon: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: IconButton(
-                                      onPressed: () async {
-                                        if (textEditingController
-                                            .text.isNotEmpty) {
-                                          notifier
-                                              .add(textEditingController.text);
-                                          _gemini
-                                              .streamChat(notifier.value)
-                                              .listen((event) {
+                          valueListenable: widget.radius,
+                          builder: (context, radiusValue, child) {
+                            return TextField(
+                              controller: textEditingController,
+                              enabled: radiusValue > 0 ? false : true,
+                              maxLines: 1,
+                              cursorColor: AppColors.black,
+                              decoration: InputDecoration(
+                                suffixIcon: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: IconButton(
+                                    onPressed: () async {
+                                      if (textEditingController
+                                          .text.isNotEmpty) {
+                                        notifier
+                                            .add(textEditingController.text);
+                                        _gemini
+                                            .streamChat(notifier.value)
+                                            .listen(
+                                          (event) {
+                                            print("event: ${event.toJson()}");
                                             notifier
                                                 .addFromModel(event.content);
-                                          });
-                                          textEditingController.clear();
-                                        }
-                                      },
-                                      icon: Image(
-                                        width: 35,
-                                        color: AppColors.black,
-                                        image: AssetImage(AppImages.send),
-                                      ),
-                                    ),
-                                  ),
-                                  hintText: "Send a message.",
-                                  border: const OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                  ),
-                                  focusedBorder: const OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
+                                          },
+                                        )
+                                          ..onError(
+                                            (e) => print(
+                                                "##############$e###############"),
+                                          )
+                                          ..onDone(
+                                            () => print("Done"),
+                                          )
+                                          ..onData(
+                                              (data) => print("Data is $data"));
+                                        textEditingController.clear();
+                                      }
+                                    },
+                                    icon: Image(
+                                      width: 35,
+                                      color: AppColors.black,
+                                      image: AssetImage(AppImages.send),
                                     ),
                                   ),
                                 ),
-                              );
-                            }),
+                                hintText: "Send a message.",
+                                border: const OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                ),
+                                focusedBorder: const OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ],
@@ -308,6 +321,7 @@ class MyNotifier extends ValueNotifier<List<Content>> {
 
   void addFromModel(Content? content) {
     if (content == null || content.parts == null) return;
+
     if (value.last.role == "model") {
       value.last.parts?.addAll(content.parts ?? []);
     } else {

@@ -1,5 +1,7 @@
 import 'package:ai_project/src/common/constants/app_colors.dart';
 import 'package:ai_project/src/feature/home/home_page.dart';
+import 'package:ai_project/src/feature/splash_page/review_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -26,7 +28,9 @@ class _SplashPageState extends State<SplashPage>
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => const HomePage(),
+          builder: (context) => FirebaseAuth.instance.currentUser != null
+              ? const HomePage()
+              : const ReviewPage(),
         ),
       );
     }

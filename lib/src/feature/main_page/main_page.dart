@@ -42,15 +42,17 @@ class MainPage extends StatelessWidget {
                       borderRadius: const BorderRadius.all(
                         Radius.circular(100),
                       ),
-                      child: Image(
-                        image: NetworkImage("${user!.photoURL}"),
-                      ),
+                      child: user?.photoURL != null
+                          ? Image(
+                              image: NetworkImage("${user!.photoURL}"),
+                            )
+                          : const SizedBox.shrink(),
                     ),
                     title: Text(
                       overflow: TextOverflow.ellipsis,
-                      "${user.displayName}".replaceRange(
-                        "${user.displayName}".indexOf(" "),
-                        "${user.displayName}".length,
+                      "${user?.displayName}".replaceRange(
+                        "${user?.displayName}".indexOf(" "),
+                        "${user?.displayName}".length,
                         " ",
                       ),
                       maxLines: 1,
@@ -61,7 +63,7 @@ class MainPage extends StatelessWidget {
                     ),
                     subtitle: Text(
                       maxLines: 1,
-                      "${user.email}",
+                      "${user?.email}",
                       overflow: TextOverflow.ellipsis,
                       style: context.textTheme.labelSmall?.copyWith(
                         color: AppColors.white,
