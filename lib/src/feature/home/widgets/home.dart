@@ -6,11 +6,11 @@ import 'package:ai_project/src/common/utils/context_utils.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:ai_project/src/common/constants/app_colors.dart';
 import 'package:ai_project/src/common/constants/app_icons.dart';
 import 'package:ai_project/src/common/constants/app_images.dart';
+import 'package:lottie/lottie.dart';
 
 import 'chat_page.dart';
 
@@ -97,8 +97,10 @@ class _HomeState extends State<Home> {
           actions: [
             IconButton(
               onPressed: () {},
-              icon: const Icon(
-                Icons.more_horiz,
+              icon: Lottie.asset(
+                AppIcons.more,
+                filterQuality: FilterQuality.high,
+                frameRate: FrameRate.max,
               ),
             ),
           ],
@@ -183,10 +185,20 @@ class _HomeState extends State<Home> {
                         return Visibility(
                           visible: running,
                           child: _customButton(
-                            icon: AppIcons.rest,
+                            icon: running
+                                ? AppIcons.stopLottie
+                                : AppIcons.restart,
                             context: context,
                             text: running ? "Stop" : "Regenerate Response",
-                            size: size,
+                            size: running
+                                ? Size(
+                                    size.width * 0.22,
+                                    size.height * 0.05,
+                                  )
+                                : Size(
+                                    size.width * 0.5,
+                                    size.height * 0.05,
+                                  ),
                             onPressed: running
                                 ? () {
                                     streamSubscription?.cancel();
@@ -362,24 +374,23 @@ Widget _customButton({
     OutlinedButton(
       onPressed: onPressed,
       style: FilledButton.styleFrom(
-        fixedSize: Size(
-          size.width * 0.6,
-          size.height * 0.05,
-        ),
-      ),
+          fixedSize: size, padding: const EdgeInsets.all(0)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SvgPicture.asset(
+          Lottie.asset(
             icon,
-            width: 24,
-            color: AppColors.text6161,
+            // controller: controller,
+            filterQuality: FilterQuality.high,
+            frameRate: FrameRate.max,
           ),
-          Text(
-            text,
-            style: context.textTheme.labelMedium?.copyWith(
-              color: AppColors.text6161,
-              fontWeight: FontWeight.w600,
+          Expanded(
+            child: Text(
+              text,
+              style: context.textTheme.labelMedium?.copyWith(
+                color: AppColors.text6161,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ],

@@ -9,6 +9,10 @@ abstract class AppIcons{
   static const String telegram = "assets/svg/telegram.svg";
   static const String chat = "assets/svg/chat.svg";
   static const String info = "assets/svg/info.svg";
-  static const String rest = "assets/svg/rest.svg";
   static const String flora = "assets/svg/flora.png";
+  static const String stopLottie = "assets/lottie/stop_lottie.json";
+  static const String restart = "assets/lottie/restart.json";
+  static const String share = "assets/lottie/share.json";
+  static const String copy = "assets/lottie/copy.json";
+  static const String more = "assets/lottie/more.json";
 }
