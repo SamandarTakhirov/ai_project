@@ -27,83 +27,86 @@ class _ChatPageState extends State<ChatPage> {
       controller: widget.controller,
       itemBuilder: (context, index) {
         final isUser = widget.contents.elementAt(index).role == "user";
-        return ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: size.width * 0.2,
-            minWidth: size.width * 0.2,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                color:
-                    !isUser ? AppColors.aiTextBKG : AppColors.userTextBKG,
-                borderRadius: BorderRadius.only(
-                  topLeft: const Radius.circular(20),
-                  topRight: const Radius.circular(20),
-                  bottomLeft: Radius.circular(
-                    isUser ? 20 : 0,
-                  ),
-                  bottomRight: Radius.circular(
-                    isUser ? 0 : 20,
-                  ),
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 3),
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: !isUser ? AppColors.aiTextBKG : Colors.transparent,
+              borderRadius: BorderRadius.only(
+                topLeft: const Radius.circular(20),
+                topRight: const Radius.circular(20),
+                bottomRight: Radius.circular(
+                  isUser ? 0 : 20,
                 ),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: !isUser
-                      ? CrossAxisAlignment.start
-                      : CrossAxisAlignment.end,
-                  children: [
-                    !isUser
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  Image(
-                                    image: const AssetImage(AppIcons.flora),
-                                    width: size.width * 0.07,
-                                    height: size.width * 0.07,
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(!isUser ? 8.0 : 0),
+              child: Column(
+                crossAxisAlignment:
+                    !isUser ? CrossAxisAlignment.start : CrossAxisAlignment.end,
+                children: [
+                  !isUser
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Image(
+                                  image: const AssetImage(AppIcons.flora),
+                                  width: size.width * 0.07,
+                                  height: size.width * 0.07,
+                                ),
+                                Text(
+                                  "Answer",
+                                  style: context.textTheme.titleSmall?.copyWith(
+                                    fontWeight: FontWeight.w600,
                                   ),
-                                  Text(
-                                    "Answer",
-                                    style:
-                                        context.textTheme.titleSmall?.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  _CustomButton(
-                                    onTap: () {},
-                                    icon: Icons.copy,
-                                  ),
-                                  _CustomButton(
-                                    onTap: () {},
-                                    icon: Icons.share,
-                                  ),
-                                ],
-                              )
-                            ],
-                          )
-                        : const SizedBox.shrink(),
-                    Text(
-                      "${widget.contents[index].parts?.map((e) => e.text).join()}",
-                      textAlign:
-                          isUser ? TextAlign.right : TextAlign.left,
-                      style: context.textTheme.titleSmall?.copyWith(
-                        color: isUser ? AppColors.white : AppColors.black,
-                        fontWeight:
-                            isUser ? FontWeight.w500 : FontWeight.w400,
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                _CustomButton(
+                                  onTap: () {},
+                                  icon: Icons.copy,
+                                ),
+                                _CustomButton(
+                                  onTap: () {},
+                                  icon: Icons.share,
+                                ),
+                              ],
+                            )
+                          ],
+                        )
+                      : const SizedBox.shrink(),
+                  DecoratedBox(
+                    decoration: BoxDecoration(
+                      color:
+                          isUser ? AppColors.userTextBKG : Colors.transparent,
+                      borderRadius: BorderRadius.only(
+                        topLeft: const Radius.circular(20),
+                        topRight: const Radius.circular(20),
+                        bottomLeft: Radius.circular(
+                          !isUser ? 0 : 20,
+                        ),
                       ),
                     ),
-                  ],
-                ),
+                    child: Padding(
+                      padding: EdgeInsets.all(isUser ? 10.0 : 0),
+                      child: Text(
+                        "${widget.contents[index].parts?.map((e) => e.text).join()}",
+                        textAlign: isUser ? TextAlign.right : TextAlign.left,
+                        style: context.textTheme.titleSmall?.copyWith(
+                          color: isUser ? AppColors.white : AppColors.black,
+                          fontWeight:
+                              isUser ? FontWeight.w500 : FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
