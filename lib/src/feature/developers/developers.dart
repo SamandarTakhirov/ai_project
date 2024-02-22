@@ -1,7 +1,12 @@
+import 'package:ai_project/src/common/utils/context_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
+
+import '../../common/constants/app_colors.dart';
+import '../../common/constants/app_icons.dart';
 
 class Developers extends StatelessWidget {
-  final double radius;
+  final ValueNotifier<double> radius;
 
   const Developers({
     required this.radius,
@@ -10,9 +15,51 @@ class Developers extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.all(Radius.circular(radius)),
-      child: const Scaffold(),
+    return ValueListenableBuilder(
+      valueListenable: radius,
+      builder: (context, radiusValue, child) {
+        return ClipRRect(
+          borderRadius: BorderRadius.all(
+            Radius.circular(radiusValue == 1 ? 20 : 0),
+          ),
+          child: child,
+        );
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.white,
+        appBar: AppBar(
+          surfaceTintColor: Colors.transparent,
+          backgroundColor: AppColors.white,
+          leading: GestureDetector(
+            onTap: () {
+              radius.value = 1;
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image.asset(
+                AppIcons.flora,
+              ),
+            ),
+          ),
+          title: Text(
+            "Developers",
+            style: context.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          centerTitle: true,
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: Lottie.asset(
+                AppIcons.more,
+                filterQuality: FilterQuality.high,
+                frameRate: FrameRate.max,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

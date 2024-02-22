@@ -1,8 +1,10 @@
+import 'package:ai_project/src/common/constants/app_images.dart';
 import 'package:ai_project/src/common/models/menus_model.dart';
 import 'package:ai_project/src/common/utils/context_utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../common/constants/app_colors.dart';
 import '../../common/constants/app_icons.dart';
@@ -29,8 +31,15 @@ class MainPage extends StatelessWidget {
 
     final user = FirebaseAuth.instance.currentUser;
     return Scaffold(
-      body: ColoredBox(
-        color: AppColors.black,
+      body: DecoratedBox(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+              AppImages.aiBKG,
+            ),
+            fit: BoxFit.fitHeight,
+          ),
+        ),
         child: SafeArea(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -100,7 +109,7 @@ class MainPage extends StatelessWidget {
                       radius.value = 0;
                     },
                     menusModels: const MenusModels(
-                      icon: AppIcons.logout,
+                      icon: AppIcons.chatIcon,
                       text: "Log out",
                     ),
                   ),
@@ -187,12 +196,8 @@ class CustomListTile extends StatelessWidget {
         ),
         ListTile(
           onTap: onTap,
-          leading: SvgPicture.asset(
+          leading: Lottie.asset(
             menusModels.icon,
-            colorFilter: ColorFilter.mode(
-              isActive ? Colors.black : AppColors.white,
-              BlendMode.srcIn,
-            ),
             width: 20,
             height: 20,
           ),

@@ -59,14 +59,10 @@ class _HomePageState extends State<HomePage> {
                       index: value,
                       children: [
                         Home(radius: radius),
-                        const Scaffold(),
-                        HistoryPage(
-                          radius: item == 1 ? 20 : 0,
-                        ),
-                        Developers(
-                          radius: item == 1 ? 20 : 0,
-                        ),
-                        const About(),
+                        Home(radius: radius),
+                        About(radius: radius),
+                        HistoryPage(radius: radius),
+                        Developers(radius: radius),
                       ],
                     );
                   },

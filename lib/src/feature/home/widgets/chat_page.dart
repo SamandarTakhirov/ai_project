@@ -96,8 +96,8 @@ class _ChatPageState extends State<ChatPage> {
                             ),
                             _CustomButton(
                               onTap: () async {
-                                final image = await screenshotController
-                                    .captureFromWidget(
+                                final image =
+                                await screenshotController.captureFromWidget(
                                   context: context,
                                   Screenshot(
                                     controller: screenshotController,

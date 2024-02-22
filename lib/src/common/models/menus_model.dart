@@ -11,23 +11,23 @@ class MenusModels {
 
   static const List<MenusModels> menus =  [
     MenusModels(
-      icon: AppIcons.chat,
+      icon: AppIcons.chatIcon,
       text: "Chat",
     ),
     MenusModels(
-      icon: AppIcons.newWindow,
+      icon: AppIcons.chatIcon,
       text: "New chat",
     ),
     MenusModels(
-      icon: AppIcons.history,
+      icon: AppIcons.chatIcon,
       text: "History",
     ),
     MenusModels(
-      icon: AppIcons.developer,
+      icon: AppIcons.developersIcon,
       text: "Developers",
     ),
     MenusModels(
-      icon: AppIcons.info,
+      icon: AppIcons.about,
       text: "About",
     ),
   ];
