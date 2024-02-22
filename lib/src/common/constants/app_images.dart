@@ -6,4 +6,5 @@ abstract class AppImages {
   static String google = "assets/images/google_logo.png";
   static String send = "assets/svg/send.png";
   static String rest = "assets/svg/rest.svg";
+  static String aiBKG = "assets/images/ai_bkg.jpg";
 }

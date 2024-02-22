@@ -7,7 +7,6 @@ abstract class AppIcons{
   static const String googlePlay = "assets/svg/googleplay.svg";
   static const String instagram = "assets/svg/instagram.svg";
   static const String telegram = "assets/svg/telegram.svg";
-  static const String chat = "assets/svg/chat.svg";
   static const String info = "assets/svg/info.svg";
   static const String flora = "assets/svg/flora.png";
   static const String stopLottie = "assets/lottie/stop_lottie.json";
@@ -15,4 +14,7 @@ abstract class AppIcons{
   static const String share = "assets/lottie/share.json";
   static const String copy = "assets/lottie/copy.json";
   static const String more = "assets/lottie/more.json";
+  static const String chatIcon = "assets/lottie/chaticon.json";
+  static const String about = "assets/lottie/about.json";
+  static const String developersIcon = "assets/lottie/developers_icon.json";
 }
