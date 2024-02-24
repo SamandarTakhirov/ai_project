@@ -124,7 +124,7 @@ class _HomeState extends State<Home> {
               child: ValueListenableBuilder(
                 valueListenable: notifier,
                 builder: (context, value, child) {
-                  if (value.isEmpty) {
+                  if (value.length <= 2) {
                     return Padding(
                       padding: EdgeInsets.all(size.width * 0.05),
                       child: Column(
