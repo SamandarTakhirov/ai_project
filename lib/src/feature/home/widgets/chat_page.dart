@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:ai_project/src/common/utils/context_utils.dart';
-import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
@@ -54,8 +53,10 @@ class _ChatPageState extends State<ChatPage> {
 
     return ListView.builder(
       controller: widget.controller,
+      shrinkWrap: true,
       itemBuilder: (context, index) {
-        final isUser = widget.contents.elementAt(index).role == "user";
+        final content = widget.contents.elementAt(index);
+        final isUser = content.role == "user";
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 3),
           child: DecoratedBox(
@@ -96,8 +97,8 @@ class _ChatPageState extends State<ChatPage> {
                             ),
                             _CustomButton(
                               onTap: () async {
-                                final image =
-                                await screenshotController.captureFromWidget(
+                                final image = await screenshotController
+                                    .captureFromWidget(
                                   context: context,
                                   Screenshot(
                                     controller: screenshotController,

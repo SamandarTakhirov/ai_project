@@ -2,7 +2,9 @@
 
 import 'dart:async';
 
+import 'package:ai_project/src/common/models/finish_reason.dart';
 import 'package:ai_project/src/common/utils/context_utils.dart';
+import 'package:ai_project/src/feature/custom_instructions/custom_instructions.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
@@ -28,12 +30,22 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late final TextEditingController textEditingController;
-  final MyNotifier notifier = MyNotifier([]);
+  late final MyNotifier notifier;
   late final ScrollController _scrollController;
   static final _gemini = Gemini.instance;
   final GlobalKey<FormState> key = GlobalKey<FormState>();
   final ValueNotifier<bool> isRunning = ValueNotifier(false);
   StreamSubscription? streamSubscription;
+
+  static final _errorMessage = Content(
+    parts: [
+      Parts(
+        text:
+            "I am still working to learn more languages, so I can't do that just yet. Please refer to the Gemini Help Center for a current list of supported languages. Is there anything else you'd like my help with?",
+      ),
+    ],
+    role: "model",
+  );
 
   List<String> questions = [
     "FloraAI haqida to'liq ma'lumot",
@@ -48,6 +60,7 @@ class _HomeState extends State<Home> {
   void initState() {
     textEditingController = TextEditingController();
     _scrollController = ScrollController();
+    notifier = MyNotifier(CustomInstructions.mainInstruction);
     super.initState();
   }
 
@@ -143,11 +156,7 @@ class _HomeState extends State<Home> {
                               return _CustomTextButton(
                                 onTap: () async {
                                   notifier.add(questions[index]);
-                                  _gemini
-                                      .streamChat(notifier.value)
-                                      .listen((event) {
-                                    notifier.addFromModel(event.content);
-                                  });
+                                  _generateContent();
                                 },
                                 size: size,
                                 text: questions[index],
@@ -168,7 +177,7 @@ class _HomeState extends State<Home> {
                     },
                   );
                   return ChatPage(
-                    contents: value,
+                    contents: value.sublist(2),
                     controller: _scrollController,
                   );
                 },
@@ -239,26 +248,9 @@ class _HomeState extends State<Home> {
                                         onPressed: () async {
                                           if (textEditingController
                                               .text.isNotEmpty) {
-                                            isRunning.value = true;
                                             notifier.add(
                                                 textEditingController.text);
-                                            streamSubscription = _gemini
-                                                .streamChat(notifier.value)
-                                                .listen(
-                                              (event) {
-                                                notifier.addFromModel(
-                                                  event.content,
-                                                );
-                                              },
-                                              onDone: () {
-                                                isRunning.value = false;
-                                              },
-                                              onError: (e) {
-                                                print("Error: $e");
-                                              },
-                                              cancelOnError: true,
-                                            );
-
+                                            _generateContent();
                                             textEditingController.clear();
                                           }
                                         },
@@ -295,6 +287,40 @@ class _HomeState extends State<Home> {
           ],
         ),
       ),
+    );
+  }
+
+  void _generateContent() {
+    isRunning.value = true;
+    streamSubscription = _gemini.streamChat(notifier.value).listen(
+      (event) {
+        if (event.finishReason == FinishReason.other) {
+          notifier.addError(_errorMessage);
+        } else {
+          notifier.addFromModel(event.content);
+        }
+      },
+      onDone: () {
+        isRunning.value = false;
+      },
+      onError: (e) {
+        if (e is GeminiException) {
+          isRunning.value = false;
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                content: Text(
+                  e.message.toString(),
+                ),
+                duration: const Duration(
+                  seconds: 2,
+                ),
+              ),
+            );
+        }
+      },
+      cancelOnError: true,
     );
   }
 }
@@ -348,7 +374,21 @@ class MyNotifier extends ValueNotifier<List<Content>> {
       ],
       role: "user",
     );
-    value.add(content);
+    if (value.lastOrNull?.role == "user") {
+      value[value.length - 1] = content;
+    } else {
+      value.add(content);
+    }
+
+    notifyListeners();
+  }
+
+  void addError(Content content) {
+    if (value.last.role == "model") {
+      value[value.length - 1] = content;
+    } else {
+      value.add(content);
+    }
     notifyListeners();
   }
 

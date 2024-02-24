@@ -88,7 +88,8 @@ class _LogInPageState extends State<LogInPage>
                       _button(
                         onTap: () async {
                           final userCredential = await singInWithGoogle();
-                          if (userCredential.user!.emailVerified && mounted) {
+                          if (userCredential.user!.emailVerified) {
+                            if (!context.mounted) return;
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
